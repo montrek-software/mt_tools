@@ -1,10 +1,13 @@
 from django.urls import reverse
 from file_upload.views import MontrekUploadFileView
 from mt_tools.excel_processor.pages import ExcelProcessorPage
+from mt_tools.excel_processor.managers.excel_processor_managers import (
+    ExcelProcessorManager,
+)
 
 
 class ExcelProcessorUploadFileView(MontrekUploadFileView):
-    # file_upload_manager_class = ExcelProcessorManager
+    file_upload_manager_class = ExcelProcessorManager
     accept = ".XLSX"
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
