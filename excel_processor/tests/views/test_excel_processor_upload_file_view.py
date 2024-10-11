@@ -2,6 +2,9 @@ from django.test import TestCase
 from django.urls import reverse
 from testing.decorators import add_logged_in_user
 import os
+from mt_tools.excel_processor.repositories.excel_processor_repositories import (
+    ExcelProcessorFileUploadRegistryRepository,
+)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
@@ -22,3 +25,5 @@ class TestExcelProcessorUploadFileView(TestCase):
             data = {"file": f}
             response = self.client.post(self.url, data, follow=True)
         self.assertRedirects(response, reverse("excel_processor"))
+        test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
+        self.assertEqual(test_query.count(), 1)
