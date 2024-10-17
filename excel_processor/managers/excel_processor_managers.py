@@ -29,6 +29,7 @@ class ExcelProcessor:
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
     repository_class = ExcelProcessorFileUploadRegistryRepository
+    download_url = "excel_processor_registry_download"
 
 
 class ExcelProcessorManager(FileUploadManagerABC):
