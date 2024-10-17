@@ -1,10 +1,15 @@
+import os
+
 from django.test import TestCase
 from django.urls import reverse
-from testing.decorators import add_logged_in_user
-import os
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
+from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
+    ExcelProcessorFileUploadRegistryStaticSatelliteFactory,
+)
+
+from testing.decorators import add_logged_in_user
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
@@ -27,3 +32,22 @@ class TestExcelProcessorUploadFileView(TestCase):
         self.assertRedirects(response, reverse("excel_processor"))
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
+
+    def test_view_download_file(self):
+        registry_factory = ExcelProcessorFileUploadRegistryStaticSatelliteFactory(
+            generate_file_upload_file=True
+        )
+        response = self.client.get(
+            reverse(
+                "excel_processor_registry_download",
+                kwargs={"pk": registry_factory.hub_entity.id},
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Type"],
+            "text/plain",
+        )
+        self.assertEqual(
+            response["Content-Disposition"], 'attachment; filename="test_file.txt"'
+        )
