@@ -2,11 +2,15 @@ import os
 
 from django.test import TestCase
 from django.urls import reverse
+from testing.test_cases.view_test_cases import MontrekListViewTestCase
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
 from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
     ExcelProcessorFileUploadRegistryStaticSatelliteFactory,
+)
+from mt_tools.excel_processor.views import (
+    ExcelProcessorRegistryListView,
 )
 
 from testing.decorators import add_logged_in_user
@@ -32,6 +36,17 @@ class TestExcelProcessorUploadFileView(TestCase):
         self.assertRedirects(response, reverse("excel_processor"))
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
+
+
+class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
+    viewname = "excel_processor_registry"
+    view_class = ExcelProcessorRegistryListView
+    expected_no_of_rows = 3
+
+    def build_factories(self):
+        ExcelProcessorFileUploadRegistryStaticSatelliteFactory.create_batch(
+            self.expected_no_of_rows
+        )
 
     def test_view_download_file(self):
         registry_factory = ExcelProcessorFileUploadRegistryStaticSatelliteFactory(

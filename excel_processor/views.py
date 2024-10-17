@@ -1,5 +1,9 @@
 from django.urls import reverse
-from file_upload.views import MontrekDownloadFileView, MontrekUploadFileView
+from file_upload.views import (
+    FileUploadRegistryView,
+    MontrekDownloadFileView,
+    MontrekUploadFileView,
+)
 from mt_tools.excel_processor.pages import ExcelProcessorPage
 from mt_tools.excel_processor.managers.excel_processor_managers import (
     ExcelProcessorManager,
@@ -15,6 +19,12 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
 
     def get_success_url(self):
         return reverse("excel_processor")
+
+
+class ExcelProcessorRegistryListView(FileUploadRegistryView):
+    manager_class = ExcelProcessorRegistryManager
+    title = "Excel Processor Registry"
+    page_class = ExcelProcessorPage
 
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
