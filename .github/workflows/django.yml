@@ -59,14 +59,14 @@ jobs:
           pip install -r requirements.txt
       - name: Setup env
         run: |
-          ENV_PATH=./montrek/.env
+          ENVPATH="./montrek/.env"
           echo "DB_ENGINE=postgres" >> $ENVPATH
           echo "DB_PORT=5432" >> $ENVPATH
           echo "DB_USER=postgres" >> $ENVPATH
           echo "DB_PASSWORD=ci_pipe_pssw" >> $ENVPATH
           echo "DB_NAME=montrek_ci_pipe_db" >> $ENVPATH
           echo "DB_HOST=0.0.0.0" >> $ENVPATH
-          echo "INSTALLED_APPS=\"mt_tools.excel_processor" >> $ENVPATH
+          echo "INSTALLED_APPS=\"mt_tools.excel_processor\"" >> $ENVPATH
 
       - name: Run Tests and Coverage
         run: |
