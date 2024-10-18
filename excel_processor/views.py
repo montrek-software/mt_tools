@@ -50,6 +50,7 @@ class ExcelProcessorRegistryListView(FileUploadRegistryView):
     manager_class = ExcelProcessorRegistryManager
     title = "Excel Processor Registry"
     page_class = ExcelProcessorPage
+    tab = "tab_excel_processor_upload"
 
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
