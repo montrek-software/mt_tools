@@ -5,6 +5,7 @@ from file_upload.views import (
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
+from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.managers.excel_processor_managers import (
     ExcelProcessorManager,
     ExcelProcessorRegistryManager,
@@ -17,6 +18,7 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
     accept = ".XLSX"
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
+    upload_form_class = ExcelProcessorUploadFileForm
 
     @property
     def actions(self) -> tuple:

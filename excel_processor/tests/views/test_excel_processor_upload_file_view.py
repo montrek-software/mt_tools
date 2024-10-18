@@ -28,6 +28,7 @@ class TestExcelProcessorUploadFileView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "upload_form.html")
+        self.assertTrue("function" in response.context[0]["form"].fields)
 
     def test_view_post_success__no_change(self):
         with open(self.test_file_path_a, "rb") as f:
