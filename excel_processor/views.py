@@ -5,11 +5,15 @@ from file_upload.views import (
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
+from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.managers.excel_processor_managers import (
     ExcelProcessorManager,
     ExcelProcessorRegistryManager,
 )
 from mt_tools.excel_processor.pages import ExcelProcessorPage
+from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
+    ExcelProcessorBasisFunctions,
+)
 
 
 class ExcelProcessorUploadFileView(MontrekUploadFileView):
@@ -17,6 +21,16 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
     accept = ".XLSX"
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
+    upload_form_class = ExcelProcessorUploadFileForm
+    excel_processor_functions_class = ExcelProcessorBasisFunctions
+
+    def get_template_context(self, **kwargs):
+        return {
+            "form": self.upload_form_class(
+                self.accept,
+                excel_processor_functions_class=self.excel_processor_functions_class,
+            )
+        }
 
     @property
     def actions(self) -> tuple:
@@ -31,11 +45,20 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
     def get_success_url(self):
         return reverse("excel_processor")
 
+    def get_post_form(self, request):
+        return self.upload_form_class(
+            self.accept,
+            request.POST,
+            request.FILES,
+            excel_processor_functions_class=self.excel_processor_functions_class,
+        )
+
 
 class ExcelProcessorRegistryListView(FileUploadRegistryView):
     manager_class = ExcelProcessorRegistryManager
     title = "Excel Processor Registry"
     page_class = ExcelProcessorPage
+    tab = "tab_excel_processor_upload"
 
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
