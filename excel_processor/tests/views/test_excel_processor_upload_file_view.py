@@ -36,7 +36,7 @@ class TestExcelProcessorUploadFileView(TestCase):
         view = response.context[0]["view"]
         self.assertTrue("function" in form.fields)
         list_functions = inspect.getmembers(
-            ExcelProcessorBasisFunctions, inspect.isfunction
+            view.excel_processor_functions_class, inspect.isfunction
         )
         list_functions = [
             (f[0], f[0].replace("_", " ").title()) for f in list_functions
