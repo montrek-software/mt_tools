@@ -50,6 +50,9 @@ class TestExcelProcessorUploadFileView(TestCase):
         self.assertRedirects(response, reverse("excel_processor"))
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
+        self.assertEqual(
+            response.get("Content-Disposition"), f"attachment; filename={f.name}"
+        )
 
 
 class TestExcelProcessorRegistryListView(MontrekListViewTestCase):

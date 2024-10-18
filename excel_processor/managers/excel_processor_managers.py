@@ -1,8 +1,9 @@
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
-from file_upload.models import FileUploadRegistryHubABC
 from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
 )
+from file_upload.models import FileUploadRegistryHubABC
+from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
@@ -13,9 +14,14 @@ class ExcelProcessor:
         self,
         file_upload_registry_hub: FileUploadRegistryHubABC,
         session_data: dict[str, ...],
+        upload_form: ExcelProcessorUploadFileForm,
         **kwargs,
     ):
         self.message = "Not processed!"
+        self.processor_function = upload_form.cleaned_data.get("function")
+        self.excel_processor_functions_class = (
+            upload_form.excel_processor_functions_class
+        )
 
     def pre_check(self, file_path: str) -> bool:
         return True
