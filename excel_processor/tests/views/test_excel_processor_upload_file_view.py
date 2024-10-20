@@ -45,11 +45,14 @@ class TestExcelProcessorUploadFileView(TestCase):
 
     def test_view_post_success__no_change(self):
         with open(self.test_file_path_a, "rb") as f:
-            data = {"file": f, "function": "hallo"}
+            data = {"file": f, "function": "no_change"}
             response = self.client.post(self.url, data, follow=True)
-        self.assertRedirects(response, reverse("excel_processor"))
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            'attachment; filename="test_excel__no_change.xlsx"',
+        )
 
 
 class TestExcelProcessorRegistryListView(MontrekListViewTestCase):

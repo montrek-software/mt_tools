@@ -42,6 +42,10 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
         )
         return (action_registry,)
 
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        return self.file_upload_manager.processor.http_response
+
     def get_success_url(self):
         return reverse("excel_processor")
 
