@@ -46,8 +46,8 @@ class TestExcelProcessorUploadFileView(TestCase):
             data = {"file": f, "function": function_name}
             return self.client.post(self.url, data, follow=True)
 
-    def test_view_post_success__no_change(self):
-        response = self._get_response_from_function("no_change")
+    def _do_test_view_post_success(self, function_name: str):
+        response = self._get_response_from_function(function_name)
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
         content_disposition = response.get("Content-Disposition")
@@ -55,8 +55,11 @@ class TestExcelProcessorUploadFileView(TestCase):
             content_disposition.startswith('attachment; filename="test_excel'),
         )
         self.assertTrue(
-            content_disposition.endswith('__no_change.xlsx"'),
+            content_disposition.endswith(f'__{function_name}.xlsx"'),
         )
+
+    def test_view_post_success__no_change(self):
+        self._do_test_view_post_success("no_change")
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
