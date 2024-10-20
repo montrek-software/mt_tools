@@ -35,7 +35,11 @@ class ExcelProcessor:
         process_function = getattr(
             self.excel_processor_functions_class, self.processor_function
         )
-        output_df = process_function(file_path)
+        try:
+            output_df = process_function(file_path)
+        except Exception as e:
+            self.message = f"Error raised during Excel File Processing function {self.processor_function}: {e}"
+            return False
         with pd.ExcelWriter(self.http_response) as excel_writer:
             output_df.to_excel(excel_writer, index=False)
         filename = (

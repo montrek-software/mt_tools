@@ -60,7 +60,11 @@ class TestExcelProcessorUploadFileView(TestCase):
         self.assertEqual(response.status_code, 200)
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
-        self.assertEqual(test_query.first().status, "Error")
+        self.assertEqual(test_query.first().upload_status, "failed")
+        self.assertEqual(
+            test_query.first().upload_message,
+            "Error raised during Excel File Processing function raise_error: Error",
+        )
 
 
 class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
