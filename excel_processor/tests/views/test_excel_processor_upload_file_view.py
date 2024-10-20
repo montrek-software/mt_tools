@@ -14,9 +14,6 @@ from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
 from mt_tools.excel_processor.views import (
     ExcelProcessorRegistryListView,
 )
-from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
-    ExcelProcessorBasisFunctions,
-)
 
 from testing.decorators import add_logged_in_user
 
@@ -57,6 +54,13 @@ class TestExcelProcessorUploadFileView(TestCase):
             response.get("Content-Disposition"),
             'attachment; filename="test_excel__no_change.xlsx"',
         )
+
+    def test_view_post__catch_raised_error(self):
+        response = self._get_response_from_function("raise_error")
+        self.assertEqual(response.status_code, 200)
+        test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
+        self.assertEqual(test_query.count(), 1)
+        self.assertEqual(test_query.first().status, "Error")
 
 
 class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
