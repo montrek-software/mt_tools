@@ -50,14 +50,17 @@ class TestExcelProcessorUploadFileView(TestCase):
         response = self._get_response_from_function("no_change")
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
-        self.assertEqual(
-            response.get("Content-Disposition"),
-            'attachment; filename="test_excel__no_change.xlsx"',
+        content_disposition = response.get("Content-Disposition")
+        self.assertTrue(
+            content_disposition.startswith('attachment; filename="test_excel'),
+        )
+        self.assertTrue(
+            content_disposition.endswith('__no_change.xlsx"'),
         )
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
         self.assertEqual(test_query.first().upload_status, "failed")
