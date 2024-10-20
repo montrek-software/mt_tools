@@ -2,6 +2,7 @@ import inspect
 import os
 
 from django.test import TestCase
+from django.test.client import WSGIRequest
 from django.urls import reverse
 from testing.test_cases.view_test_cases import MontrekListViewTestCase
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
@@ -43,10 +44,13 @@ class TestExcelProcessorUploadFileView(TestCase):
         ]
         self.assertEqual(form.fields["function"].choices, list_functions)
 
-    def test_view_post_success__no_change(self):
+    def _get_response_from_function(self, function_name: str) -> WSGIRequest:
         with open(self.test_file_path_a, "rb") as f:
-            data = {"file": f, "function": "no_change"}
-            response = self.client.post(self.url, data, follow=True)
+            data = {"file": f, "function": function_name}
+            return self.client.post(self.url, data, follow=True)
+
+    def test_view_post_success__no_change(self):
+        response = self._get_response_from_function("no_change")
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
         self.assertEqual(
