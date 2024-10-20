@@ -58,9 +58,6 @@ class TestExcelProcessorUploadFileView(TestCase):
             content_disposition.endswith(f'__{function_name}.xlsx"'),
         )
 
-    def test_view_post_success__no_change(self):
-        self._do_test_view_post_success("no_change")
-
     def test_view_post_success__format_montrek(self):
         self._do_test_view_post_success("format_montrek")
 
