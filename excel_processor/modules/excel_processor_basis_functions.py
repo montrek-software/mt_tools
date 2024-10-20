@@ -3,7 +3,7 @@ import pandas as pd
 
 class ExcelProcessorBasisFunctions:
     @staticmethod
-    def no_change(inpath: str) -> pd.DataFrame:
+    def format_montrek(inpath: str) -> pd.DataFrame:
         """Returns the same dataframe as the input."""
         return pd.read_excel(inpath)
 

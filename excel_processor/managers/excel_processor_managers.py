@@ -9,9 +9,14 @@ from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
+from mt_tools.excel_processor.modules.excel_processor_formatter import (
+    ExcelProcessorMontrekFormatter,
+)
 
 
 class ExcelProcessor:
+    excel_processor_formatter = ExcelProcessorMontrekFormatter
+
     def __init__(
         self,
         file_upload_registry_hub: FileUploadRegistryHubABC,
@@ -44,7 +49,8 @@ class ExcelProcessor:
             )
             return False
         with pd.ExcelWriter(self.http_response) as excel_writer:
-            output_df.to_excel(excel_writer, index=False)
+            output_df.to_excel(excel_writer, index=False, engine="openpyxl")
+            self.excel_processor_formatter.format_excel(excel_writer)
         filename = (
             f"{file_path.split('/')[-1].split('.')[0]}__{self.processor_function}.xlsx"
         )
@@ -52,6 +58,7 @@ class ExcelProcessor:
             "Content-Type"
         ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         self.http_response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        self.message = f"Processed and downloaded {self.processor_function}"
         return True
 
     def post_check(self, file_path: str) -> bool:
