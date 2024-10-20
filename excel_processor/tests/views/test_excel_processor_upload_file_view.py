@@ -2,6 +2,7 @@ import inspect
 import os
 
 from django.test import TestCase
+from django.test.client import WSGIRequest
 from django.urls import reverse
 from testing.test_cases.view_test_cases import MontrekListViewTestCase
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
@@ -12,9 +13,6 @@ from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
 )
 from mt_tools.excel_processor.views import (
     ExcelProcessorRegistryListView,
-)
-from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
-    ExcelProcessorBasisFunctions,
 )
 
 from testing.decorators import add_logged_in_user
@@ -43,15 +41,32 @@ class TestExcelProcessorUploadFileView(TestCase):
         ]
         self.assertEqual(form.fields["function"].choices, list_functions)
 
-    def test_view_post_success__no_change(self):
+    def _get_response_from_function(self, function_name: str) -> WSGIRequest:
         with open(self.test_file_path_a, "rb") as f:
-            data = {"file": f, "function": "no_change"}
-            response = self.client.post(self.url, data, follow=True)
+            data = {"file": f, "function": function_name}
+            return self.client.post(self.url, data, follow=True)
+
+    def test_view_post_success__no_change(self):
+        response = self._get_response_from_function("no_change")
         test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
         self.assertEqual(test_query.count(), 1)
+        content_disposition = response.get("Content-Disposition")
+        self.assertTrue(
+            content_disposition.startswith('attachment; filename="test_excel'),
+        )
+        self.assertTrue(
+            content_disposition.endswith('__no_change.xlsx"'),
+        )
+
+    def test_view_post__catch_raised_error(self):
+        response = self._get_response_from_function("raise_error")
+        self.assertEqual(response.status_code, 404)
+        test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
+        self.assertEqual(test_query.count(), 1)
+        self.assertEqual(test_query.first().upload_status, "failed")
         self.assertEqual(
-            response.get("Content-Disposition"),
-            'attachment; filename="test_excel__no_change.xlsx"',
+            test_query.first().upload_message,
+            "Error raised during Excel File Processing function raise_error: Error",
         )
 
 

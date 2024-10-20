@@ -1,5 +1,5 @@
 import pandas as pd
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
 from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
@@ -35,7 +35,14 @@ class ExcelProcessor:
         process_function = getattr(
             self.excel_processor_functions_class, self.processor_function
         )
-        output_df = process_function(file_path)
+        try:
+            output_df = process_function(file_path)
+        except Exception as e:
+            self.message = f"Error raised during Excel File Processing function {self.processor_function}: {e}"
+            self.http_response = HttpResponseRedirect(
+                self.request.META.get("HTTP_REFERER")
+            )
+            return False
         with pd.ExcelWriter(self.http_response) as excel_writer:
             output_df.to_excel(excel_writer, index=False)
         filename = (
