@@ -28,7 +28,13 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         super().setUp()
         self.test_file_path_a = os.path.join(DATA_DIR, "test_excel.xlsx")
 
+    def _is_base_test_class(self) -> bool:
+        # Django runs all tests within these base classes here individually. This is not wanted and hence we skip the tests if django attempts to do this.
+        return self.__class__.__name__ == "ExcelProcessorUploadFileTestCase"
+
     def test_view_return_correct_html(self):
+        if self._is_base_test_class():
+            return
         super().test_view_return_correct_html()
         form = self.response.context[0]["form"]
         view = self.response.context[0]["view"]
@@ -58,6 +64,11 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
             content_disposition.endswith(f'__{function_name}.xlsx"'),
         )
 
+
+class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
+    viewname = "excel_processor"
+    view_class = ExcelProcessorUploadFileView
+
     def test_view_post_success__format_montrek(self):
         self._do_test_view_post_success("format_montrek")
 
@@ -71,11 +82,6 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
             test_query.first().upload_message,
             "Error raised during Excel File Processing function raise_error: Error",
         )
-
-
-class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
-    viewname = "excel_processor"
-    view_class = ExcelProcessorUploadFileView
 
 
 class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
