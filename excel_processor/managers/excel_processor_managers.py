@@ -41,7 +41,7 @@ class ExcelProcessor:
             self.excel_processor_functions_class, self.processor_function
         )
         try:
-            output_df = process_function(file_path)
+            output_dfs = process_function(file_path)
         except Exception as e:
             self.message = f"Error raised during Excel File Processing function {self.processor_function}: {e}"
             self.http_response = HttpResponseRedirect(
@@ -49,8 +49,13 @@ class ExcelProcessor:
             )
             return False
         with pd.ExcelWriter(self.http_response) as excel_writer:
-            output_df.to_excel(excel_writer, index=False, engine="openpyxl")
-            self.excel_processor_formatter.format_excel(excel_writer)
+            for sheet in output_dfs:
+                output_dfs[sheet].to_excel(
+                    excel_writer, sheet_name=sheet, index=False, engine="openpyxl"
+                )
+                self.excel_processor_formatter.format_excel(
+                    excel_writer, sheet_name=sheet
+                )
         filename = (
             f"{file_path.split('/')[-1].split('.')[0]}__{self.processor_function}.xlsx"
         )
