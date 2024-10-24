@@ -19,6 +19,7 @@ from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
 class ExcelProcessorUploadFileView(MontrekUploadFileView):
     file_upload_manager_class = ExcelProcessorManager
     accept = ".XLSX"
+    title = "Excel Processor"
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
     upload_form_class = ExcelProcessorUploadFileForm
