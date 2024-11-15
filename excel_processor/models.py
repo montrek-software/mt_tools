@@ -1,9 +1,10 @@
+from baseclasses.fields import HubForeignKey
+from baseclasses.models import HubValueDate, MontrekOneToOneLinkABC
 from django.db import models
 from file_upload.models import (
     FileUploadRegistryHubABC,
     FileUploadRegistryStaticSatelliteABC,
 )
-from baseclasses.models import MontrekOneToOneLinkABC
 
 
 class ExcelProcessorFileUploadRegistryHub(FileUploadRegistryHubABC):
@@ -12,6 +13,10 @@ class ExcelProcessorFileUploadRegistryHub(FileUploadRegistryHubABC):
         related_name="link_file_upload_file_excel_processor_registry",
         through="LinkExcelProcessorRegistryFile",
     )
+
+
+class ExcelProcessorFileUploadRegistryHubValueDate(HubValueDate):
+    hub = HubForeignKey(ExcelProcessorFileUploadRegistryHub)
 
 
 class ExcelProcessorFileUploadRegistryStaticSatellite(

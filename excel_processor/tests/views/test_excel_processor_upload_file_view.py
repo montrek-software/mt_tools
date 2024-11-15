@@ -54,7 +54,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
 
     def _do_test_view_post_success(self, function_name: str):
         response = self._get_response_from_function(function_name)
-        test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
+        test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         content_disposition = response.get("Content-Disposition")
         self.assertTrue(
@@ -75,7 +75,7 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
         self.assertEqual(response.status_code, 404)
-        test_query = ExcelProcessorFileUploadRegistryRepository().std_queryset()
+        test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         self.assertEqual(test_query.first().upload_status, "failed")
         self.assertEqual(
