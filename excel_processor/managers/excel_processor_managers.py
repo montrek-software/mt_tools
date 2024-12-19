@@ -1,11 +1,15 @@
 import pandas as pd
+from zipfile import ZipFile
 from django.http import HttpResponse, HttpResponseRedirect
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
 from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
 )
 from file_upload.models import FileUploadRegistryHubABC
-from mt_tools.excel_processor.modules.excel_processor_functions import ExcelProcessorReturnType
+from mt_tools.excel_processor.modules.excel_processor_functions import (
+    ExcelProcessorReturnType,
+    ExcelProcessorReturn,
+)
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
@@ -50,29 +54,39 @@ class ExcelProcessor:
             )
             return False
         if output.return_type == ExcelProcessorReturnType.XLSX:
-            self.return_excel(output.data, file_path)
+            self.return_excel(output, file_path)
+        elif output.return_type == ExcelProcessorReturnType.ZIP:
+            self.return_zip(output, file_path)
         self.message = f"Processed and downloaded {self.processor_function}"
         return True
 
     def post_check(self, file_path: str) -> bool:
         return True
 
-    def return_excel(self, output: dict[str, pd.DataFrame], file_path: str) -> None:
+    def return_excel(self, output: ExcelProcessorReturn, file_path: str) -> None:
         with pd.ExcelWriter(self.http_response) as excel_writer:
-            for sheet in output:
-                output[sheet].to_excel(
+            for sheet in output.data:
+                output.data[sheet].to_excel(
                     excel_writer, sheet_name=sheet, index=False, engine="openpyxl"
                 )
                 self.excel_processor_formatter.format_excel(
                     excel_writer, sheet_name=sheet
                 )
-        filename = (
-            f"{file_path.split('/')[-1].split('.')[0]}__{self.processor_function}.xlsx"
-        )
+        filename = self._get_filename(output.return_type, file_path)
         self.http_response[
             "Content-Type"
         ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         self.http_response["Content-Disposition"] = f'attachment; filename="{filename}"'
+
+    def return_zip(self, output: list[str], file_path: str) -> None:
+        with ZipFile(self.http_response, "w") as zip_file:
+            for file in output:
+                zip_file.write(file_path + file)
+
+    def _get_filename(
+        self, return_type: ExcelProcessorReturnType, file_path: str
+    ) -> str:
+        return f"{file_path.split('/')[-1].split('.')[0]}__{self.processor_function}.{return_type.value}"
 
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
