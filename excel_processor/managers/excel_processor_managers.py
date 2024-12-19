@@ -1,4 +1,3 @@
-from enum import Enum
 import pandas as pd
 from django.http import HttpResponse, HttpResponseRedirect
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
@@ -6,6 +5,7 @@ from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
 )
 from file_upload.models import FileUploadRegistryHubABC
+from mt_tools.excel_processor.modules.excel_processor_functions import ExcelProcessorReturnType
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
@@ -15,14 +15,8 @@ from mt_tools.excel_processor.modules.excel_processor_formatter import (
 )
 
 
-class ExcelReturns(Enum):
-    EXCEL = "excel"
-    ZIP = "zip"
-
-
 class ExcelProcessor:
     excel_processor_formatter = ExcelProcessorMontrekFormatter
-    excel_returner: ExcelReturns = ExcelReturns.EXCEL
 
     def __init__(
         self,
@@ -55,8 +49,8 @@ class ExcelProcessor:
                 self.request.META.get("HTTP_REFERER")
             )
             return False
-        if self.excel_returner == ExcelReturns.EXCEL:
-            self.return_excel(output, file_path)
+        if output.return_type == ExcelProcessorReturnType.XLSX:
+            self.return_excel(output.data, file_path)
         self.message = f"Processed and downloaded {self.processor_function}"
         return True
 
