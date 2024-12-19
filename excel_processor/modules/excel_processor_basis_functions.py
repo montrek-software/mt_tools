@@ -1,6 +1,9 @@
 import pandas as pd
 
-from mt_tools.excel_processor.modules.excel_processor_functions import return_excel, return_zip
+from mt_tools.excel_processor.modules.excel_processor_functions import (
+    return_excel,
+    return_zip,
+)
 
 
 class ExcelProcessorBasisFunctions:
@@ -20,5 +23,9 @@ class ExcelProcessorBasisFunctions:
 
     @staticmethod
     @return_zip
-    def to_markdown(inpth: str) -> list[str]:
-        return ["Hallo"]
+    def to_markdown(inpath: str) -> list[str]:
+        """Converts the Excel to markdown and stores in zip"""
+        data_frame = pd.read_excel(inpath)
+        out_path = inpath.replace(".xlsx", ".md")
+        data_frame.to_markdown(out_path)
+        return [inpath, out_path]

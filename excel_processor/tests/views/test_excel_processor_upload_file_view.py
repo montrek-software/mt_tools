@@ -77,6 +77,7 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         content_disposition = response.get("Content-Disposition")
+        raise NotImplementedError("Noch n qualitativer test, bitte!")
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
