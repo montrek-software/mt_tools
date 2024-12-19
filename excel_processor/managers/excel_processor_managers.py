@@ -1,3 +1,4 @@
+from enum import Enum
 import pandas as pd
 from django.http import HttpResponse, HttpResponseRedirect
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
@@ -14,8 +15,14 @@ from mt_tools.excel_processor.modules.excel_processor_formatter import (
 )
 
 
+class ExcelReturns(Enum):
+    EXCEL = "excel"
+    ZIP = "zip"
+
+
 class ExcelProcessor:
     excel_processor_formatter = ExcelProcessorMontrekFormatter
+    excel_returner: ExcelReturns = ExcelReturns.EXCEL
 
     def __init__(
         self,
@@ -41,16 +48,25 @@ class ExcelProcessor:
             self.excel_processor_functions_class, self.processor_function
         )
         try:
-            output_dfs = process_function(file_path)
+            output = process_function(file_path)
         except Exception as e:
             self.message = f"Error raised during Excel File Processing function {self.processor_function}: {e}"
             self.http_response = HttpResponseRedirect(
                 self.request.META.get("HTTP_REFERER")
             )
             return False
+        if self.excel_returner == ExcelReturns.EXCEL:
+            self.return_excel(output, file_path)
+        self.message = f"Processed and downloaded {self.processor_function}"
+        return True
+
+    def post_check(self, file_path: str) -> bool:
+        return True
+
+    def return_excel(self, output: dict[str, pd.DataFrame], file_path: str) -> None:
         with pd.ExcelWriter(self.http_response) as excel_writer:
-            for sheet in output_dfs:
-                output_dfs[sheet].to_excel(
+            for sheet in output:
+                output[sheet].to_excel(
                     excel_writer, sheet_name=sheet, index=False, engine="openpyxl"
                 )
                 self.excel_processor_formatter.format_excel(
@@ -63,11 +79,6 @@ class ExcelProcessor:
             "Content-Type"
         ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         self.http_response["Content-Disposition"] = f'attachment; filename="{filename}"'
-        self.message = f"Processed and downloaded {self.processor_function}"
-        return True
-
-    def post_check(self, file_path: str) -> bool:
-        return True
 
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
