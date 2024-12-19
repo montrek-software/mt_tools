@@ -14,10 +14,20 @@ class ExcelProcessorReturn:
     return_type: ExcelProcessorReturnType
 
 
-def return_excel(func):
-    def wrapper(*args, **kwargs):
-        return ExcelProcessorReturn(
-            data=func(*args, **kwargs), return_type=ExcelProcessorReturnType.XLSX
-        )
+def return_with_type(return_type):
+    """Decorator factory to return data with a specified type."""
 
-    return wrapper
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            return ExcelProcessorReturn(
+                data=func(*args, **kwargs), return_type=return_type
+            )
+
+        return wrapper
+
+    return decorator
+
+
+# Create specific decorators using the factory
+return_excel = return_with_type(ExcelProcessorReturnType.XLSX)
+return_zip = return_with_type(ExcelProcessorReturnType.ZIP)

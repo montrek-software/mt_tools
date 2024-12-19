@@ -72,6 +72,12 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
     def test_view_post_success__format_montrek(self):
         self._do_test_view_post_success("format_montrek")
 
+    def test_view_post_success__to_markdown(self):
+        response = self._get_response_from_function("to_markdown")
+        test_query = ExcelProcessorFileUploadRegistryRepository().receive()
+        self.assertEqual(test_query.count(), 1)
+        content_disposition = response.get("Content-Disposition")
+
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
         self.assertEqual(response.status_code, 404)

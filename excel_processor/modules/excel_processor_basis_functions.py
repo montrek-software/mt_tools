@@ -1,6 +1,6 @@
 import pandas as pd
 
-from mt_tools.excel_processor.modules.excel_processor_functions import return_excel
+from mt_tools.excel_processor.modules.excel_processor_functions import return_excel, return_zip
 
 
 class ExcelProcessorBasisFunctions:
@@ -17,3 +17,8 @@ class ExcelProcessorBasisFunctions:
     def raise_error(inpath: str) -> dict[str, pd.DataFrame]:
         """Raises an error for testing purposes."""
         raise ValueError("Error")
+
+    @staticmethod
+    @return_zip
+    def to_markdown(inpth: str) -> list[str]:
+        return ["Hallo"]
