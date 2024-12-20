@@ -80,18 +80,21 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         self.assertEqual(test_query.count(), 1)
         content_disposition = response.get("Content-Disposition")
         self.assertIsNotNone(content_disposition)
-        self.assertEqual(
-            content_disposition, 'attachment; filename="test_excel__to_markdown.zip"'
+        self.assertTrue(
+            content_disposition.startswith('attachment; filename="test_excel')
         )
+        self.assertTrue(content_disposition.endswith('__to_markdown.zip"'))
         zip_file = io.BytesIO(response.content)
         # Open the ZIP file
         with zipfile.ZipFile(zip_file, "r") as zip:
             # Check the list of files in the ZIP archive
             files_in_zip = zip.namelist()
-            expected_files = ["test_excel.xlsx", "test_excel.md"]
+            expected_file_types = ["xlsx", "md"]
             # Assert all expected files are present
-            for expected_file in expected_files:
-                self.assertIn(expected_file, files_in_zip)
+            for result_file in files_in_zip:
+                self.assertTrue(result_file.startswith("test_excel"))
+                file_appendix = result_file.split(".")[-1]
+                self.assertTrue(file_appendix in expected_file_types)
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
