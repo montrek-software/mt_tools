@@ -1,5 +1,7 @@
 import inspect
+import io
 import os
+import zipfile
 
 from django.test.client import WSGIRequest
 from django.urls import reverse
@@ -77,7 +79,19 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         content_disposition = response.get("Content-Disposition")
-        raise NotImplementedError("Noch n qualitativer test, bitte!")
+        self.assertIsNotNone(content_disposition)
+        self.assertEqual(
+            content_disposition, 'attachment; filename="test_excel__to_markdown.zip"'
+        )
+        zip_file = io.BytesIO(response.content)
+        # Open the ZIP file
+        with zipfile.ZipFile(zip_file, "r") as zip:
+            # Check the list of files in the ZIP archive
+            files_in_zip = zip.namelist()
+            expected_files = ["test_excel.xlsx", "test_excel.md"]
+            # Assert all expected files are present
+            for expected_file in expected_files:
+                self.assertIn(expected_file, files_in_zip)
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
