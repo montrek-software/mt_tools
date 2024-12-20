@@ -79,7 +79,7 @@ class ExcelProcessor:
     def return_zip(self, output: ExcelProcessorReturn) -> None:
         with ZipFile(self.http_response, "w") as zip_file:
             for file in output.data:
-                zip_file.write(file)
+                zip_file.write(file, arcname=os.path.basename(file))
 
     def _get_filename(
         self, return_type: ExcelProcessorReturnType, file_path: str
