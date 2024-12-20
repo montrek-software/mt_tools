@@ -23,4 +23,15 @@ class TestExcelProcessorBasisFunctions(TestCase):
             ExcelProcessorBasisFunctions.raise_error(self.test_file_path)
 
     def test_to_markdown(self):
-        results = ExcelProcessorBasisFunctions.to_markdown(self.test_file_path)
+        results = ExcelProcessorBasisFunctions.to_markdown(self.test_file_path).data
+        self.assertEqual(len(results), 2)
+        expected_md = """|    |   A |   B |   C |
+|---:|----:|----:|----:|
+|  0 |   1 |   4 |   8 |
+|  1 |   2 |   5 |   9 |
+|  2 |   3 |   6 |  10 |"""
+        with open(results[1]) as f:
+            self.assertEqual(
+                f.read(),
+                expected_md,
+            )
