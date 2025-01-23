@@ -66,11 +66,9 @@ class ExcelProcessor:
         return True
 
     def return_excel(self, output: ExcelProcessorReturn) -> None:
-        with pd.ExcelWriter(self.http_response) as excel_writer:
+        with pd.ExcelWriter(self.http_response, engine="openpyxl") as excel_writer:
             for sheet in output.data:
-                output.data[sheet].to_excel(
-                    excel_writer, sheet_name=sheet, index=False, engine="openpyxl"
-                )
+                output.data[sheet].to_excel(excel_writer, sheet_name=sheet, index=False)
                 self.excel_processor_formatter.format_excel(
                     excel_writer, sheet_name=sheet
                 )
