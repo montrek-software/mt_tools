@@ -12,18 +12,25 @@ class TestExcelProcessorBasisFunctions(TestCase):
         self.test_file_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "data", "test_file.xlsx"
         )
+        self.session_data = {}
 
     def test_format_montrek(self):
-        result = ExcelProcessorBasisFunctions.format_montrek(self.test_file_path).data
+        result = ExcelProcessorBasisFunctions.format_montrek(
+            self.test_file_path, self.session_data
+        ).data
         test_df = pd.read_excel(self.test_file_path)
         pd.testing.assert_frame_equal(result["ExampleSheet"], test_df)
 
     def test_raise_error(self):
         with self.assertRaises(ValueError):
-            ExcelProcessorBasisFunctions.raise_error(self.test_file_path)
+            ExcelProcessorBasisFunctions.raise_error(
+                self.test_file_path, self.session_data
+            )
 
     def test_to_markdown(self):
-        results = ExcelProcessorBasisFunctions.to_markdown(self.test_file_path).data
+        results = ExcelProcessorBasisFunctions.to_markdown(
+            self.test_file_path, self.session_data
+        ).data
         self.assertEqual(len(results), 2)
         expected_md = """|    |   A |   B |   C |
 |---:|----:|----:|----:|

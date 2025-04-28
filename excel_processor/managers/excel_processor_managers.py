@@ -49,7 +49,7 @@ class ExcelProcessor:
             self.processor_function_name,
         )
         try:
-            output = processor_function(file_path)
+            output = processor_function(file_path, self.session_data)
         except Exception as e:
             self.message = f"Error raised during Excel File Processing function {self.processor_function_name}: {e}"
             self.http_response = HttpResponseRedirect(self.session_data["http_referer"])
