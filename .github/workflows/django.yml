@@ -67,6 +67,7 @@ jobs:
           echo "DB_NAME=montrek_ci_pipe_db" >> $ENVPATH
           echo "DB_HOST=0.0.0.0" >> $ENVPATH
           echo "INSTALLED_APPS=\"mt_tools.excel_processor\"" >> $ENVPATH
+          echo "SECRET_KEY=testkey" >> $ENVPATH
 
       - name: Run Tests and Coverage
         run: |
