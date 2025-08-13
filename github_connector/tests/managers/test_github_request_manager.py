@@ -5,10 +5,8 @@ from mt_tools.github_connector.managers.github_request_manager import (
 
 
 class TestGitHubRequestManager(TestCase):
-    def test_get_miletone_path(self):
-        # TODO: Fix test
-        return
-        manager = GitHubRequestManager()
+    def test_get_milestone_path(self):
+        manager = GitHubRequestManager({"token": "ABCDEF"})
         owner = "owner"
         repository = "repository"
         milestone_nr = 1
