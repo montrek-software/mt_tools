@@ -20,3 +20,8 @@ class TestGitHubManager(TestCase):
         manager = MockGitHubManager()
         description = manager.get_milestone_description("owner", "repository", 1)
         self.assertEqual(description, "<p>Test Milestone</p>")
+
+    def test_get_milestone_description__no_description(self):
+        manager = MockGitHubManager()
+        description = manager.get_milestone_description("not_an_owner", "repository", 1)
+        self.assertEqual(description, "")
