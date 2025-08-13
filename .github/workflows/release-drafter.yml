@@ -13,4 +13,4 @@ on:
   workflow_dispatch:
 jobs:
   run-tests:
-    uses: montrek-software/montrek-templates/.github/workflows/montrek_release_drafter_template.yml@main
+    uses: montrek-software/.github/.github/workflows/montrek_release_drafter_template.yml@main
