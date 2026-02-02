@@ -1,8 +1,6 @@
-from django.core.files.uploadedfile import SimpleUploadedFile
 import factory
-from baseclasses.tests.factories.montrek_factory_schemas import (
-    MontrekHubFactory,
-)
+from baseclasses.tests.factories.montrek_factory_schemas import MontrekHubFactory
+from django.core.files.uploadedfile import SimpleUploadedFile
 from file_upload.tests.factories.file_upload_factories import (
     FileUploadFileStaticSatelliteFactory,
     FileUploadRegistryStaticSatelliteFactory,

@@ -1,9 +1,10 @@
+from django.core.files import File
 from file_upload.models import FileUploadFileStaticSatellite
-from mt_tools.excel_processor import models
 from file_upload.repositories.file_upload_registry_repository import (
     FileUploadRegistryRepositoryABC,
 )
-from django.core.files import File
+
+from mt_tools.excel_processor import models
 
 
 class ExcelProcessorFileUploadRegistryRepository(FileUploadRegistryRepositoryABC):

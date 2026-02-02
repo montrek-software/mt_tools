@@ -1,12 +1,11 @@
-from io import BytesIO
 import os
-from typing import IO, Any
+from io import BytesIO
+from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile
-from django.core.files.base import ContentFile
 
-from django.urls import resolve
 import pandas as pd
-from django.http import HttpResponse, HttpResponseRedirect
+from django.core.files.base import ContentFile
+from django.urls import resolve
 from file_upload.managers.file_upload_manager import FileUploadManagerABC
 from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
@@ -15,6 +14,8 @@ from file_upload.models import FileUploadRegistryHubABC
 from file_upload.repositories.file_upload_file_repository import (
     FileUploadFileRepository,
 )
+from reporting.dataclasses.table_elements import LinkTableElement
+
 from mt_tools.excel_processor.modules.excel_processor_formatter import (
     ExcelProcessorMontrekFormatter,
 )
@@ -25,7 +26,6 @@ from mt_tools.excel_processor.modules.excel_processor_functions import (
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
-from reporting.dataclasses.table_elements import LinkTableElement
 
 
 class ExcelProcessor:
