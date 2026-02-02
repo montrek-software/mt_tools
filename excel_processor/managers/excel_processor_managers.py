@@ -20,6 +20,7 @@ from mt_tools.excel_processor.modules.excel_processor_functions import (
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
+from reporting.dataclasses.table_elements import LinkTableElement
 
 
 class ExcelProcessor:
@@ -98,6 +99,21 @@ class ExcelProcessor:
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
     repository_class = ExcelProcessorFileUploadRegistryRepository
     download_url = "excel_processor_registry_download"
+
+    @property
+    def table_elements(self) -> tuple:
+        table_elements = super().table_elements
+        table_elements = list(table_elements)
+        table_elements = [
+            LinkTableElement(
+                name="Processed File",
+                url="excel_processor_download_processed_file",
+                kwargs={"pk": "id"},
+                icon="download",
+                hover_text="Download Processed File",
+            )
+        ] + table_elements
+        return tuple(table_elements)
 
 
 class ExcelProcessorManager(FileUploadManagerABC):
