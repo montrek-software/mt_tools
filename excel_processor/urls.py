@@ -3,7 +3,14 @@ from mt_tools.excel_processor import views
 
 urlpatterns = [
     path(
-        "upload", views.ExcelProcessorUploadFileView.as_view(), name="excel_processor"
+        "registry_list",
+        views.ExcelProcessorRegistryListView.as_view(),
+        name="excel_processor",
+    ),
+    path(
+        "upload",
+        views.ExcelProcessorUploadFileView.as_view(),
+        name="upload_excel_processor",
     ),
     path(
         "registry_list",

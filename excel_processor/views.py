@@ -65,6 +65,16 @@ class ExcelProcessorRegistryListView(FileUploadRegistryView):
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
 
+    @property
+    def actions(self) -> tuple:
+        action_upload = ActionElement(
+            icon="upload",
+            link=reverse("upload_excel_processor"),
+            action_id="id_upload_excel_processor",
+            hover_text="Excel Processor Upload",
+        )
+        return (action_upload,)
+
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
     manager_class = ExcelProcessorRegistryManager
