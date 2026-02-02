@@ -1,7 +1,7 @@
 from io import BytesIO
 import os
 from typing import IO, Any
-from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile
 from django.core.files.base import ContentFile
 
 from django.urls import resolve
@@ -63,9 +63,13 @@ class ExcelProcessor:
         return True
 
     def post_check(self, file_path: str) -> bool:
+        if self.output is None:
+            return False
         output_filename = self._get_filename(file_path=file_path)
         if self.output.return_type == ExcelProcessorReturnType.XLSX:
             file = self.return_excel(output_filename)
+        elif self.output.return_type == ExcelProcessorReturnType.ZIP:
+            file = self.return_zip(output_filename)
         else:
             raise TypeError(f"Unknown return type {self.output.return_type}")
         processed_file_hub = FileUploadFileRepository(self.session_data).create_by_dict(
@@ -90,10 +94,18 @@ class ExcelProcessor:
         buffer.seek(0)
         return ContentFile(buffer.read(), name=file_name)
 
-    def return_zip(self, output: ExcelProcessorReturn) -> None:
-        with ZipFile(self.http_response, "w") as zip_file:
-            for file in output.data:
-                zip_file.write(file, arcname=os.path.basename(file))
+    def return_zip(self, zip_name: str) -> ContentFile:
+        buffer = BytesIO()
+
+        with ZipFile(buffer, "w", compression=ZIP_DEFLATED) as zip_file:
+            for file_path in self.output.data:
+                zip_file.write(
+                    file_path,
+                    arcname=os.path.basename(file_path),
+                )
+
+        buffer.seek(0)
+        return ContentFile(buffer.read(), name=zip_name)
 
     def _get_filename(self, file_path: str) -> str:
         safe_name = os.path.basename(file_path)

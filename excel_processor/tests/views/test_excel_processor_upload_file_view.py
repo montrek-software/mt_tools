@@ -88,27 +88,33 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         response = self._get_response_from_function("to_markdown")
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
+        test_registry = test_query.first()
+        response = self.client.get(
+            reverse(
+                self.processed_file_download_url,
+                kwargs={"pk": test_registry.pk},
+            )
+        )
         content_disposition = response.get("Content-Disposition")
         self.assertIsNotNone(content_disposition)
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel')
         )
         self.assertTrue(content_disposition.endswith('__to_markdown.zip"'))
-        zip_file = io.BytesIO(response.content)
-        # Open the ZIP file
-        with zipfile.ZipFile(zip_file, "r") as zip:
-            # Check the list of files in the ZIP archive
+        content = b"".join(response.streaming_content)
+
+        with zipfile.ZipFile(io.BytesIO(content), "r") as zip:
             files_in_zip = zip.namelist()
             expected_file_types = ["xlsx", "md"]
-            # Assert all expected files are present
+
             for result_file in files_in_zip:
                 self.assertTrue(result_file.startswith("test_excel"))
                 file_appendix = result_file.split(".")[-1]
-                self.assertTrue(file_appendix in expected_file_types)
+                self.assertIn(file_appendix, expected_file_types)
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         self.assertEqual(test_query.first().upload_status, "failed")
