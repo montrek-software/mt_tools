@@ -57,9 +57,16 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
             return self.client.post(self.url, data, follow=True)
 
     def _do_test_view_post_success(self, function_name: str):
-        response = self._get_response_from_function(function_name)
+        self._get_response_from_function(function_name)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
+        test_registry = test_query.first()
+        response = self.client.get(
+            reverse(
+                self.processed_file_download_url,
+                kwargs={"pk": test_registry.pk},
+            )
+        )
         content_disposition = response.get("Content-Disposition")
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel'),
@@ -72,6 +79,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
 class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
     viewname = "upload_excel_processor"
     view_class = ExcelProcessorUploadFileView
+    processed_file_download_url = "excel_processor_download_processed_file"
 
     def test_view_post_success__format_montrek(self):
         self._do_test_view_post_success("format_montrek")
