@@ -103,4 +103,4 @@ class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
 class ExcelProcessorManager(FileUploadManagerABC):
     file_upload_processor_class = ExcelProcessor
     file_registry_manager_class = ExcelProcessorRegistryManager
-    do_process_file_async = False
+    do_process_file_async = True
