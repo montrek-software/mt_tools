@@ -13,6 +13,11 @@ class ExcelProcessorFileUploadRegistryHub(FileUploadRegistryHubABC):
         related_name="link_file_upload_file_excel_processor_registry",
         through="LinkExcelProcessorRegistryFile",
     )
+    link_file_upload_registry_file_processed_file = models.ManyToManyField(
+        "file_upload.FileUploadFileHub",
+        related_name="link_file_processed_file_excel_processor_registry",
+        through="LinkExcelProcessorRegistryProcessedFile",
+    )
 
 
 class ExcelProcessorFileUploadRegistryHubValueDate(HubValueDate):
@@ -28,6 +33,15 @@ class ExcelProcessorFileUploadRegistryStaticSatellite(
 
 
 class LinkExcelProcessorRegistryFile(MontrekOneToOneLinkABC):
+    hub_in = models.ForeignKey(
+        "ExcelProcessorFileUploadRegistryHub", on_delete=models.CASCADE
+    )
+    hub_out = models.ForeignKey(
+        "file_upload.FileUploadFileHub", on_delete=models.CASCADE
+    )
+
+
+class LinkExcelProcessorRegistryProcessedFile(MontrekOneToOneLinkABC):
     hub_in = models.ForeignKey(
         "ExcelProcessorFileUploadRegistryHub", on_delete=models.CASCADE
     )

@@ -2,6 +2,7 @@ from django.urls import reverse
 from baseclasses.dataclasses.view_classes import ActionElement
 from file_upload.views import (
     FileUploadRegistryView,
+    MontrekDownloadFileBaseView,
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
@@ -27,7 +28,7 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
 
     def get_template_context(self, **kwargs):
         return {
-            "form": self.upload_form_class(
+            "upload_form": self.upload_form_class(
                 self.accept,
                 excel_processor_functions_class=self.excel_processor_functions_class,
             )
@@ -43,9 +44,9 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
         )
         return (action_registry,)
 
-    def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
-        return self.file_upload_manager.processor.http_response
+    # def post(self, request, *args, **kwargs):
+    #     super().post(request, *args, **kwargs)
+    #     return self.file_upload_manager.processor.http_response
 
     def get_success_url(self):
         return reverse("excel_processor")
@@ -65,7 +66,23 @@ class ExcelProcessorRegistryListView(FileUploadRegistryView):
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
 
+    @property
+    def actions(self) -> tuple:
+        action_upload = ActionElement(
+            icon="upload",
+            link=reverse("upload_excel_processor"),
+            action_id="id_upload_excel_processor",
+            hover_text="Excel Processor Upload",
+        )
+        return (action_upload,)
+
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
     manager_class = ExcelProcessorRegistryManager
     title = "Excel Processor Registry Download"
+
+
+class ExcelProcessorDownloadProcessedFileView(MontrekDownloadFileBaseView):
+    manager_class = ExcelProcessorRegistryManager
+    title = "Excel Processor Processed File Download"
+    get_file_method = "get_processed_file"

@@ -12,11 +12,13 @@ from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
     ExcelProcessorFileUploadRegistryStaticSatelliteFactory,
 )
 from mt_tools.excel_processor.views import (
+    ExcelProcessorDownloadProcessedFileView,
     ExcelProcessorRegistryListView,
     ExcelProcessorUploadFileView,
 )
 from testing.decorators import add_logged_in_user
 from testing.test_cases.view_test_cases import (
+    MontrekDownloadViewTestCase,
     MontrekListViewTestCase,
     MontrekViewTestCase,
 )
@@ -38,7 +40,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         if self._is_base_test_class():
             return
         super().test_view_return_correct_html()
-        form = self.response.context[0]["form"]
+        form = self.response.context[0]["upload_form"]
         view = self.response.context[0]["view"]
         self.assertTrue("function" in form.fields)
         list_functions = inspect.getmembers(
@@ -55,9 +57,16 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
             return self.client.post(self.url, data, follow=True)
 
     def _do_test_view_post_success(self, function_name: str):
-        response = self._get_response_from_function(function_name)
+        self._get_response_from_function(function_name)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
+        test_registry = test_query.first()
+        response = self.client.get(
+            reverse(
+                self.processed_file_download_url,
+                kwargs={"pk": test_registry.pk},
+            )
+        )
         content_disposition = response.get("Content-Disposition")
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel'),
@@ -68,8 +77,9 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
 
 
 class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
-    viewname = "excel_processor"
+    viewname = "upload_excel_processor"
     view_class = ExcelProcessorUploadFileView
+    processed_file_download_url = "excel_processor_download_processed_file"
 
     def test_view_post_success__format_montrek(self):
         self._do_test_view_post_success("format_montrek")
@@ -78,27 +88,33 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         response = self._get_response_from_function("to_markdown")
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
+        test_registry = test_query.first()
+        response = self.client.get(
+            reverse(
+                self.processed_file_download_url,
+                kwargs={"pk": test_registry.pk},
+            )
+        )
         content_disposition = response.get("Content-Disposition")
         self.assertIsNotNone(content_disposition)
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel')
         )
         self.assertTrue(content_disposition.endswith('__to_markdown.zip"'))
-        zip_file = io.BytesIO(response.content)
-        # Open the ZIP file
-        with zipfile.ZipFile(zip_file, "r") as zip:
-            # Check the list of files in the ZIP archive
+        content = b"".join(response.streaming_content)
+
+        with zipfile.ZipFile(io.BytesIO(content), "r") as zip:
             files_in_zip = zip.namelist()
             expected_file_types = ["xlsx", "md"]
-            # Assert all expected files are present
+
             for result_file in files_in_zip:
                 self.assertTrue(result_file.startswith("test_excel"))
                 file_appendix = result_file.split(".")[-1]
-                self.assertTrue(file_appendix in expected_file_types)
+                self.assertIn(file_appendix, expected_file_types)
 
     def test_view_post__catch_raised_error(self):
         response = self._get_response_from_function("raise_error")
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         self.assertEqual(test_query.first().upload_status, "failed")
@@ -136,3 +152,19 @@ class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
         self.assertEqual(
             response["Content-Disposition"], 'attachment; filename="test_file.txt"'
         )
+
+
+class TestExcelProcessorDownloadProcessedFileView(MontrekDownloadViewTestCase):
+    viewname = "excel_processor_download_processed_file"
+    view_class = ExcelProcessorDownloadProcessedFileView
+
+    def expected_filename(self):
+        return r"test_processed_file_[A-Za-z0-9]+\.txt"
+
+    def build_factories(self):
+        self.registry = ExcelProcessorFileUploadRegistryStaticSatelliteFactory(
+            generate_file_processed_file=True
+        )
+
+    def url_kwargs(self):
+        return {"pk": self.registry.get_hub_value_date().pk}
