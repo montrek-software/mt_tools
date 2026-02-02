@@ -2,6 +2,7 @@ from django.urls import reverse
 from baseclasses.dataclasses.view_classes import ActionElement
 from file_upload.views import (
     FileUploadRegistryView,
+    MontrekDownloadFileBaseView,
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
@@ -79,3 +80,9 @@ class ExcelProcessorRegistryListView(FileUploadRegistryView):
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
     manager_class = ExcelProcessorRegistryManager
     title = "Excel Processor Registry Download"
+
+
+class ExcelProcessorDownloadProcessedFileView(MontrekDownloadFileBaseView):
+    manager_class = ExcelProcessorRegistryManager
+    title = "Excel Processor Processed File Download"
+    get_file_method = "get_processed_file"

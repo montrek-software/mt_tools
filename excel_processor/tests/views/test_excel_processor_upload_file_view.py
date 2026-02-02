@@ -12,11 +12,13 @@ from mt_tools.excel_processor.tests.factories.excel_processor_factories import (
     ExcelProcessorFileUploadRegistryStaticSatelliteFactory,
 )
 from mt_tools.excel_processor.views import (
+    ExcelProcessorDownloadProcessedFileView,
     ExcelProcessorRegistryListView,
     ExcelProcessorUploadFileView,
 )
 from testing.decorators import add_logged_in_user
 from testing.test_cases.view_test_cases import (
+    MontrekDownloadViewTestCase,
     MontrekListViewTestCase,
     MontrekViewTestCase,
 )
@@ -136,3 +138,19 @@ class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
         self.assertEqual(
             response["Content-Disposition"], 'attachment; filename="test_file.txt"'
         )
+
+
+class TestExcelProcessorDownloadProcessedFileView(MontrekDownloadViewTestCase):
+    viewname = "excel_processor_download_processed_file"
+    view_class = ExcelProcessorDownloadProcessedFileView
+
+    def expected_filename(self):
+        return r"test_processed_file_[A-Za-z0-9]+\.txt"
+
+    def build_factories(self):
+        self.registry = ExcelProcessorFileUploadRegistryStaticSatelliteFactory(
+            generate_file_processed_file=True
+        )
+
+    def url_kwargs(self):
+        return {"pk": self.registry.get_hub_value_date().pk}

@@ -22,4 +22,9 @@ urlpatterns = [
         views.ExcelProcessorDownloadFile.as_view(),
         name="excel_processor_registry_download",
     ),
+    path(
+        "download_processed_file/<int:pk>",
+        views.ExcelProcessorDownloadProcessedFileView.as_view(),
+        name="excel_processor_download_processed_file",
+    ),
 ]
