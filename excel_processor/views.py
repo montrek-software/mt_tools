@@ -27,7 +27,7 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
 
     def get_template_context(self, **kwargs):
         return {
-            "form": self.upload_form_class(
+            "upload_form": self.upload_form_class(
                 self.accept,
                 excel_processor_functions_class=self.excel_processor_functions_class,
             )
