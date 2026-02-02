@@ -38,7 +38,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         if self._is_base_test_class():
             return
         super().test_view_return_correct_html()
-        form = self.response.context[0]["form"]
+        form = self.response.context[0]["upload_form"]
         view = self.response.context[0]["view"]
         self.assertTrue("function" in form.fields)
         list_functions = inspect.getmembers(
@@ -68,7 +68,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
 
 
 class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
-    viewname = "excel_processor"
+    viewname = "upload_excel_processor"
     view_class = ExcelProcessorUploadFileView
 
     def test_view_post_success__format_montrek(self):
