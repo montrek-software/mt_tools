@@ -5,6 +5,13 @@ import zipfile
 
 from django.test.client import WSGIRequest
 from django.urls import reverse
+from testing.decorators import add_logged_in_user
+from testing.test_cases.view_test_cases import (
+    MontrekDownloadViewTestCase,
+    MontrekListViewTestCase,
+    MontrekViewTestCase,
+)
+
 from mt_tools.excel_processor.repositories.excel_processor_repositories import (
     ExcelProcessorFileUploadRegistryRepository,
 )
@@ -15,12 +22,6 @@ from mt_tools.excel_processor.views import (
     ExcelProcessorDownloadProcessedFileView,
     ExcelProcessorRegistryListView,
     ExcelProcessorUploadFileView,
-)
-from testing.decorators import add_logged_in_user
-from testing.test_cases.view_test_cases import (
-    MontrekDownloadViewTestCase,
-    MontrekListViewTestCase,
-    MontrekViewTestCase,
 )
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -85,7 +86,7 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         self._do_test_view_post_success("format_montrek")
 
     def test_view_post_success__to_markdown(self):
-        response = self._get_response_from_function("to_markdown")
+        self._get_response_from_function("to_markdown")
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         test_registry = test_query.first()
