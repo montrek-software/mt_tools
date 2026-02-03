@@ -1,20 +1,21 @@
-from django.urls import reverse
 from baseclasses.dataclasses.view_classes import ActionElement
+from django.urls import reverse
 from file_upload.views import (
     FileUploadRegistryView,
     MontrekDownloadFileBaseView,
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
+
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.managers.excel_processor_managers import (
     ExcelProcessorManager,
     ExcelProcessorRegistryManager,
 )
-from mt_tools.excel_processor.pages import ExcelProcessorPage
 from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
     ExcelProcessorBasisFunctions,
 )
+from mt_tools.excel_processor.pages import ExcelProcessorPage
 
 
 class ExcelProcessorUploadFileView(MontrekUploadFileView):
@@ -43,10 +44,6 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
             hover_text="Excel Processor Registry",
         )
         return (action_registry,)
-
-    # def post(self, request, *args, **kwargs):
-    #     super().post(request, *args, **kwargs)
-    #     return self.file_upload_manager.processor.http_response
 
     def get_success_url(self):
         return reverse("excel_processor")
