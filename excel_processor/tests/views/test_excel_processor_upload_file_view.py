@@ -148,10 +148,11 @@ class TestExcelProcessorRegistryListView(MontrekListViewTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response["Content-Type"],
-            "text/plain",
+            "text/csv",
         )
         self.assertEqual(
-            response["Content-Disposition"], 'attachment; filename="test_file.txt"'
+            response["Content-Disposition"],
+            f'attachment; filename="{registry_factory.file_name}"',
         )
 
 
