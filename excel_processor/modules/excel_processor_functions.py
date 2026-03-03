@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from functools import wraps
 from typing import Any, ClassVar, Protocol
 
 
@@ -37,11 +38,13 @@ def return_with_type(return_type):
     """Decorator factory to return data with a specified type."""
 
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
             return ExcelProcessorReturn(
                 data=func(*args, **kwargs), return_type=return_type
             )
 
+        wrapper._is_processor_function = True
         return wrapper
 
     return decorator
