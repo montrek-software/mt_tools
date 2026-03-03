@@ -44,21 +44,31 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         form = self.response.context[0]["upload_form"]
         view = self.response.context[0]["view"]
         self.assertTrue("function" in form.fields)
-        list_functions = inspect.getmembers(
-            view.excel_processor_functions_class, inspect.isfunction
+        all_members = inspect.getmembers(
+            view.excel_processor_functions_class,
+            predicate=lambda f: inspect.isfunction(f) or inspect.ismethod(f),
         )
-        list_functions = [
-            (f[0], f[0].replace("_", " ").title()) for f in list_functions
+        marked = [
+            f for f in all_members if getattr(f[1], "_is_processor_function", False)
         ]
-        self.assertEqual(form.fields["function"].choices, list_functions)
+        self.assertEqual(
+            form.fields["function"].choices,
+            [(f[0], f[0].replace("_", " ").title()) for f in marked],
+        )
 
-    def _get_response_from_function(self, function_name: str) -> WSGIRequest:
+    def _get_response_from_function(
+        self, function_name: str, settings_name: str | None
+    ) -> WSGIRequest:
         with open(self.test_file_path_a, "rb") as f:
             data = {"file": f, "function": function_name}
+            if settings_name is not None:
+                data.update({"settings": settings_name})
             return self.client.post(self.url, data, follow=True)
 
-    def _do_test_view_post_success(self, function_name: str):
-        self._get_response_from_function(function_name)
+    def _do_test_view_post_success(
+        self, function_name: str, settings_name: str | None = None
+    ):
+        self._get_response_from_function(function_name, settings_name)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
         test_registry = test_query.first()
