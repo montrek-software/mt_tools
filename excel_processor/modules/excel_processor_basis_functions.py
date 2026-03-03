@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import pandas as pd
 
 from mt_tools.excel_processor.modules.excel_processor_functions import (
@@ -7,6 +9,9 @@ from mt_tools.excel_processor.modules.excel_processor_functions import (
 
 
 class ExcelProcessorBasisFunctions:
+    label: ClassVar[str] = "Basis Functions"
+    description: ClassVar[str] = "Standard set of built-in Excel processing utilities."
+
     @staticmethod
     @return_excel
     def format_montrek(inpath: str, session_data: dict) -> dict[str, pd.DataFrame]:

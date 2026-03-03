@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+from typing import Any, ClassVar, Protocol
 
 
 class ExcelProcessorReturnType(Enum):
@@ -12,6 +12,24 @@ class ExcelProcessorReturnType(Enum):
 class ExcelProcessorReturn:
     data: Any
     return_type: ExcelProcessorReturnType
+
+
+class ExcelProcessorFunctionsProtocol(Protocol):
+    """Protocol for Excel Processor functions classes.
+
+    Concrete implementations should:
+    - Set ``label`` and ``description`` as class-level string attributes.
+    - Expose processing logic as ``@staticmethod`` methods decorated with
+      ``@return_excel`` or ``@return_zip``.  Each function must accept
+      ``(inpath: str, session_data: dict)`` and implicitly return an
+      ``ExcelProcessorReturn`` via the decorator.
+
+    The ``label`` is shown to users when selecting a functions class;
+    ``description`` can be used in tooltips or documentation pages.
+    """
+
+    label: ClassVar[str]
+    description: ClassVar[str]
 
 
 def return_with_type(return_type):
