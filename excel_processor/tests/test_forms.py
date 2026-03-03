@@ -26,5 +26,5 @@ class TestExcelProcessorForm(TestCase):
             test_form.fields["function"].choices, [("format_montrek", "Format Montrek")]
         )
         self.assertEqual(
-            test_form.fields["settings"].choices, [("settings_1", "settings_2")]
+            test_form.fields["settings"].choices, ["settings_1", "settings_2"]
         )

@@ -35,9 +35,19 @@ class ExcelProcessorFunctionsProtocol(Protocol):
     has_settings: ClassVar[bool]
 
 
+@dataclass
+class SettingsData:
+    name: str
+    path: Path
+    filetype: str = "toml"
+
+    def full_path(self) -> Path:
+        return self.path / f"{self.name}.{self.filetype}"
+
+
 def get_excel_processor_settings(
     excel_processor_functions_class: type[ExcelProcessorFunctionsProtocol],
-) -> list[str]:
+) -> list[SettingsData]:
     if not excel_processor_functions_class.has_settings:
         return []
     class_file = Path(inspect.getfile(excel_processor_functions_class))
@@ -53,7 +63,7 @@ def get_excel_processor_settings(
             f"or set `has_settings = False` on {excel_processor_functions_class.__name__}."
         )
 
-    return [str(f) for f in toml_files]
+    return [SettingsData(name=f.stem, path=f.parent) for f in toml_files]
 
 
 def return_with_type(return_type):

@@ -1,0 +1,3 @@
+DON'T REMOVE THIS FILE.
+
+It has the testing purpose to make sure only toml files are selected.
