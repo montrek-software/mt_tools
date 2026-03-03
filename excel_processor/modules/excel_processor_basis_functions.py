@@ -11,6 +11,7 @@ from mt_tools.excel_processor.modules.excel_processor_functions import (
 class ExcelProcessorBasisFunctions:
     label: ClassVar[str] = "Basis Functions"
     description: ClassVar[str] = "Standard set of built-in Excel processing utilities."
+    has_settings: ClassVar[bool] = False
 
     @staticmethod
     @return_excel

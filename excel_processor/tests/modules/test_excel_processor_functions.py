@@ -62,7 +62,7 @@ class GetExcelProcessorSettingsTests(TestCase):
             patch("pathlib.Path.glob", return_value=toml_files),
         ):
             result = get_excel_processor_settings(MockExcelProcessorWithSettings)
-        self.assertEqual(result, [str(f) for f in toml_files])
+        self.assertEqual([res.get_full_path() for res in result], toml_files)
 
     def test_returns_single_toml_file_as_list(self):
         toml_files = [Path("/fake/path/settings/only.toml")]
@@ -73,4 +73,4 @@ class GetExcelProcessorSettingsTests(TestCase):
         ):
             result = get_excel_processor_settings(MockExcelProcessorWithSettings)
         self.assertEqual(len(result), 1)
-        self.assertTrue(result[0].endswith(".toml"))
+        self.assertEqual(result[0].filetype, "toml")

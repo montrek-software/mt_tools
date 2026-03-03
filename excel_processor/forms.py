@@ -30,6 +30,6 @@ class ExcelProcessorUploadFileForm(UploadFileForm):
         )
         return [(f[0], f[0].replace("_", " ").title()) for f in list_functions]
 
-    def _get_excel_processor_settings_choices(self) -> list[str]:
+    def _get_excel_processor_settings_choices(self) -> list[tuple[str, str]]:
         choices = get_excel_processor_settings(self.excel_processor_functions_class)
-        return sorted([ch.name for ch in choices])
+        return sorted([(ch.name, ch.name) for ch in choices])

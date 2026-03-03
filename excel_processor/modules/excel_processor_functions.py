@@ -41,7 +41,7 @@ class SettingsData:
     path: Path
     filetype: str = "toml"
 
-    def full_path(self) -> Path:
+    def get_full_path(self) -> Path:
         return self.path / f"{self.name}.{self.filetype}"
 
 
