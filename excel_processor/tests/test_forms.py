@@ -3,6 +3,7 @@ from typing import ClassVar
 from django.test import TestCase
 
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
+from mt_tools.excel_processor.modules.excel_processor_functions import return_excel
 
 
 class MockExcelProcessorFunctionsClass:
@@ -11,6 +12,7 @@ class MockExcelProcessorFunctionsClass:
     has_settings: ClassVar[bool] = True
 
     @staticmethod
+    @return_excel
     def format_montrek(_inpath: str, _session_data: dict) -> dict[str, str]:
         """Dummy function"""
         return {"dummy": ""}
