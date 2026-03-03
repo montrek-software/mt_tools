@@ -5,8 +5,7 @@ from mt_tools.excel_processor.modules.excel_processor_settings import (
 )
 
 
-class MockExcelProcessorFunctions(ExcelProcessorSettingsMixin):
-    has_settings = True
+class MockExcelProcessorFunctions(ExcelProcessorSettingsMixin): ...
 
 
 class TestSettingsMixin(TestCase):

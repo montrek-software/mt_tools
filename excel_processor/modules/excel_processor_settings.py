@@ -52,8 +52,8 @@ def get_settings(
     settings_name = session_data.get("settings")
     if settings_name is None:
         raise KeyError(
-            "No 'settings' key found in session_data. "
-            f"Make sure `has_settings = True` is set on {functions_class.__name__}."
+            f"session_data must include a 'settings' key when the {functions_class.__name__} "
+            "has has_settings = True; missing 'settings' entry in session_data."
         )
     for setting in get_excel_processor_settings(functions_class):
         if setting.name == settings_name:
