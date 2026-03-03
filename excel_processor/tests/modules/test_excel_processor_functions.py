@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from mt_tools.excel_processor.modules.excel_processor_functions import (
+from mt_tools.excel_processor.modules.excel_processor_settings import (
     get_excel_processor_settings,
 )
 

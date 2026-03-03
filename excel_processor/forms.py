@@ -3,7 +3,7 @@ import inspect
 from django import forms
 from file_upload.forms import UploadFileForm
 
-from mt_tools.excel_processor.modules.excel_processor_functions import (
+from mt_tools.excel_processor.modules.excel_processor_settings import (
     get_excel_processor_settings,
 )
 
@@ -25,10 +25,14 @@ class ExcelProcessorUploadFileForm(UploadFileForm):
             )
 
     def _get_function_choices(self) -> list[tuple[str, str]]:
-        list_functions = inspect.getmembers(
-            self.excel_processor_functions_class, inspect.isfunction
+        all_members = inspect.getmembers(
+            self.excel_processor_functions_class,
+            predicate=lambda f: inspect.isfunction(f) or inspect.ismethod(f),
         )
-        return [(f[0], f[0].replace("_", " ").title()) for f in list_functions]
+        marked = [
+            f for f in all_members if getattr(f[1], "_is_processor_function", False)
+        ]
+        return [(f[0], f[0].replace("_", " ").title()) for f in marked]
 
     def _get_excel_processor_settings_choices(self) -> list[tuple[str, str]]:
         choices = get_excel_processor_settings(self.excel_processor_functions_class)

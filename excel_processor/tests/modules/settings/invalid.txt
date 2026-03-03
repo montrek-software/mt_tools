@@ -1,0 +1,3 @@
+DON'T REMOVE THIS FILE.
+
+This file is intentionally not a `.toml` file and is meant to be used by tests that verify only `.toml` settings files are selected (for example, that `get_excel_processor_settings()` ignores `invalid`).
