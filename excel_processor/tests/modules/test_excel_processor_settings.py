@@ -27,6 +27,19 @@ class TestSettingsMixin(TestCase):
         }
         self.assertEqual(settings, expected_data)
 
+    def test_get_setting_1__input_as_list(self):
+        settings_mixin = MockExcelProcessorFunctions()
+        settings = settings_mixin.get_settings({"settings": ["settings_1"]})
+        expected_data = {
+            "settings": {
+                "sheet_name": "Sheet1",
+                "header_row": 1,
+                "skip_empty_rows": True,
+            },
+            "output": {"file_prefix": "processed_", "include_timestamp": True},
+        }
+        self.assertEqual(settings, expected_data)
+
     def test_get_setting_2(self):
         settings_mixin = MockExcelProcessorFunctions()
         settings = settings_mixin.get_settings({"settings": "settings_2"})

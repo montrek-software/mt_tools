@@ -55,6 +55,8 @@ def get_settings(
             f"session_data must include a 'settings' key when the {functions_class.__name__} "
             "has has_settings = True; missing 'settings' entry in session_data."
         )
+    if isinstance(settings_name, list) and len(settings_name) == 1:
+        settings_name = settings_name[0]
     for setting in get_excel_processor_settings(functions_class):
         if setting.name == settings_name:
             with open(setting.get_full_path(), "rb") as f:
