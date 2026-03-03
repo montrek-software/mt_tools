@@ -31,4 +31,4 @@ class SettingsMixin:
         for setting in settings:
             if setting.name == settings_name:
                 return setting
-        raise ValueError(f"No file '{settings_name}' in settings_folder")
+        raise FileNotFoundError(f"No file '{settings_name}' in settings_folder")
