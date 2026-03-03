@@ -3,7 +3,7 @@ import inspect
 from django import forms
 from file_upload.forms import UploadFileForm
 
-from mt_tools.excel_processor.modules.excel_processor_functions import (
+from mt_tools.excel_processor.modules.excel_processor_settings import (
     get_excel_processor_settings,
 )
 

@@ -1,15 +1,17 @@
 from django.test import TestCase
 
-from mt_tools.excel_processor.modules.settings_mixin import SettingsMixin
+from mt_tools.excel_processor.modules.excel_processor_settings import (
+    ExcelProcessorSettingsMixin,
+)
 
 
-class MockExcelProcessorFunctions(SettingsMixin):
+class MockExcelProcessorFunctions(ExcelProcessorSettingsMixin):
     has_settings = True
 
 
 class TestSettingsMixin(TestCase):
     def test_get_setting__no_setting_passed(self):
-        settings_mixin = SettingsMixin()
+        settings_mixin = MockExcelProcessorFunctions()
         with self.assertRaises(KeyError):
             settings_mixin.get_settings({})
 
