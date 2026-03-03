@@ -2,6 +2,7 @@ import inspect
 import io
 import os
 import zipfile
+from typing import Any
 
 from django.test.client import WSGIRequest
 from django.urls import reverse
@@ -57,8 +58,8 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         )
 
     def _get_response_from_function(
-        self, function_name: str, settings_name: str | None
-    ) -> WSGIRequest:
+        self, function_name: str, settings_name: str | None = None
+    ) -> Any | WSGIRequest:
         with open(self.test_file_path_a, "rb") as f:
             data = {"file": f, "function": function_name}
             if settings_name is not None:
