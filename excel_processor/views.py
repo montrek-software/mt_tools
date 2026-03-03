@@ -15,6 +15,9 @@ from mt_tools.excel_processor.managers.excel_processor_managers import (
 from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
     ExcelProcessorBasisFunctions,
 )
+from mt_tools.excel_processor.modules.excel_processor_functions import (
+    ExcelProcessorFunctionsProtocol,
+)
 from mt_tools.excel_processor.pages import ExcelProcessorPage
 
 
@@ -25,7 +28,9 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
     upload_form_class = ExcelProcessorUploadFileForm
-    excel_processor_functions_class = ExcelProcessorBasisFunctions
+    excel_processor_functions_class: type[ExcelProcessorFunctionsProtocol] = (
+        ExcelProcessorBasisFunctions
+    )
 
     def get_template_context(self, **kwargs):
         return {
