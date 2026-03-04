@@ -1,18 +1,25 @@
 from testing.test_cases.view_test_cases import (
     MontrekCreateViewTestCase,
+    MontrekDeleteViewTestCase,
+    MontrekListViewTestCase,
     MontrekUpdateViewTestCase,
     MontrekViewTestCase,
-    MontrekListViewTestCase,
-    MontrekDeleteViewTestCase,
 )
-from mt_tools.notebook.tests.factories.notebook_fields_hub_factories import NotebookFieldsHubValueDateFactory
-from mt_tools.notebook.tests.factories.notebook_fields_sat_factories import NotebookFieldsSatelliteFactory
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsCreateView
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsUpdateView
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsListView
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsDeleteView
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsDetailView
-from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsHistoryView
+
+from mt_tools.notebook.tests.factories.notebook_fields_hub_factories import (
+    NotebookFieldsHubValueDateFactory,
+)
+from mt_tools.notebook.tests.factories.notebook_fields_sat_factories import (
+    NotebookFieldsSatelliteFactory,
+)
+from mt_tools.notebook.views.notebook_fields_views import (
+    NotebookFieldsCreateView,
+    NotebookFieldsDeleteView,
+    NotebookFieldsDetailView,
+    NotebookFieldsHistoryView,
+    NotebookFieldsListView,
+    NotebookFieldsUpdateView,
+)
 
 
 class TestNotebookFieldsCreateView(MontrekCreateViewTestCase):
@@ -20,7 +27,7 @@ class TestNotebookFieldsCreateView(MontrekCreateViewTestCase):
     view_class = NotebookFieldsCreateView
 
     def creation_data(self):
-        return {}
+        return {"field_name": "test_field"}
 
 
 class TestNotebookFieldsUpdateView(MontrekUpdateViewTestCase):
@@ -34,7 +41,7 @@ class TestNotebookFieldsUpdateView(MontrekUpdateViewTestCase):
         return {"pk": self.sat_obj.get_hub_value_date().id}
 
     def update_data(self):
-        return {}
+        return {"field_name": "test_field"}
 
 
 class TestNotebookFieldsListView(MontrekListViewTestCase):
@@ -55,7 +62,6 @@ class TestNotebookFieldsDeleteView(MontrekDeleteViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.sat_obj.get_hub_value_date().id}
-
 
 
 class TestNotebookFieldsDetailView(MontrekViewTestCase):
@@ -80,3 +86,4 @@ class TestNotebookFieldsHistoryView(MontrekViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.hub_vd.id}
+

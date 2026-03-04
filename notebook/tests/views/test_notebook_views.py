@@ -1,18 +1,25 @@
 from testing.test_cases.view_test_cases import (
     MontrekCreateViewTestCase,
+    MontrekDeleteViewTestCase,
+    MontrekListViewTestCase,
     MontrekUpdateViewTestCase,
     MontrekViewTestCase,
-    MontrekListViewTestCase,
-    MontrekDeleteViewTestCase,
 )
-from mt_tools.notebook.tests.factories.notebook_hub_factories import NotebookHubValueDateFactory
-from mt_tools.notebook.tests.factories.notebook_sat_factories import NotebookSatelliteFactory
-from mt_tools.notebook.views.notebook_views import NotebookCreateView
-from mt_tools.notebook.views.notebook_views import NotebookUpdateView
-from mt_tools.notebook.views.notebook_views import NotebookListView
-from mt_tools.notebook.views.notebook_views import NotebookDeleteView
-from mt_tools.notebook.views.notebook_views import NotebookDetailView
-from mt_tools.notebook.views.notebook_views import NotebookHistoryView
+
+from mt_tools.notebook.tests.factories.notebook_hub_factories import (
+    NotebookHubValueDateFactory,
+)
+from mt_tools.notebook.tests.factories.notebook_sat_factories import (
+    NotebookSatelliteFactory,
+)
+from mt_tools.notebook.views.notebook_views import (
+    NotebookCreateView,
+    NotebookDeleteView,
+    NotebookDetailView,
+    NotebookHistoryView,
+    NotebookListView,
+    NotebookUpdateView,
+)
 
 
 class TestNotebookCreateView(MontrekCreateViewTestCase):
@@ -20,7 +27,7 @@ class TestNotebookCreateView(MontrekCreateViewTestCase):
     view_class = NotebookCreateView
 
     def creation_data(self):
-        return {}
+        return {"notebook_name": "Test Notebook"}
 
 
 class TestNotebookUpdateView(MontrekUpdateViewTestCase):
@@ -34,7 +41,7 @@ class TestNotebookUpdateView(MontrekUpdateViewTestCase):
         return {"pk": self.sat_obj.get_hub_value_date().id}
 
     def update_data(self):
-        return {}
+        return {"notebook_name": "Test Notebook"}
 
 
 class TestNotebookListView(MontrekListViewTestCase):
@@ -55,7 +62,6 @@ class TestNotebookDeleteView(MontrekDeleteViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.sat_obj.get_hub_value_date().id}
-
 
 
 class TestNotebookDetailView(MontrekViewTestCase):
@@ -80,3 +86,4 @@ class TestNotebookHistoryView(MontrekViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.hub_vd.id}
+
