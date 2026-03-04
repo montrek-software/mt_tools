@@ -1,3 +1,6 @@
+from mt_tools.notebook.dataclasses.notebook_table_elements import (
+    NotebookFieldTableElement,
+)
 from mt_tools.notebook.repositories.notebook_repositories import (
     NotebookNotebookDatasRepository,
 )
@@ -85,7 +88,7 @@ class NotebookNotebookDatasTableManager(NotebookDataTableManager):
         )
         fields = notebook.field_name
         for field in fields.split(";"):
-            table_elements.append(te.StringTableElement(name=field, attr="data_row"))
+            table_elements.append(NotebookFieldTableElement(name=field, attr=field))
 
         table_elements += [
             te.LinkTableElement(
