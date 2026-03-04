@@ -15,7 +15,6 @@ class NotebookDataRepository(MontrekRepository):
             NotebookSatellite,
             LinkNotebookDataNotebook,
             ["hub_entity_id"],
-            rename_field_map={'hub_entity_id': 'notebook_id'}
+            rename_field_map={"hub_entity_id": "notebook_id"},
         )
         self.add_satellite_fields_annotations(NotebookDataSatellite, ["data_row"])
-

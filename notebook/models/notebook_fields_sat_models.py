@@ -10,4 +10,3 @@ class NotebookFieldsSatellite(MontrekSatelliteABC):
     field_name = models.CharField(max_length=256)
 
     identifier_fields = ["field_name"]
-

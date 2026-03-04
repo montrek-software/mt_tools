@@ -9,9 +9,7 @@ from mt_tools.notebook.views.notebook_data_views import NotebookDataHistoryView
 
 urlpatterns = [
     path(
-        "notebook_data",
-        lambda _: redirect("notebook_data_list"),
-        name="notebook_data"
+        "notebook_data", lambda _: redirect("notebook_data_list"), name="notebook_data"
     ),
     path(
         "notebook_data/list",

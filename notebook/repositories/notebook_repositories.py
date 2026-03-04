@@ -20,4 +20,3 @@ class NotebookNotebookDatasRepository(NotebookDataRepository):
             pk=self.session_data.get("pk")
         ).hub
         return super().receive(apply_filter).filter(notebook_id=notebook_hub.id)
-

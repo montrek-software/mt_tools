@@ -6,9 +6,6 @@ from mt_tools.notebook.tests.factories.notebook_data_sat_factories import (
     NotebookDataSatelliteFactory,
 )
 from mt_tools.notebook.views.notebook_views import NotebookNotebookFieldssListView
-from mt_tools.notebook.tests.factories.notebook_sat_factories import (
-    NotebookSatelliteFactory,
-)
 from mt_tools.notebook.tests.factories.notebook_fields_sat_factories import (
     NotebookFieldsSatelliteFactory,
 )
@@ -22,9 +19,6 @@ from testing.test_cases.view_test_cases import (
 
 from mt_tools.notebook.tests.factories.notebook_hub_factories import (
     NotebookHubValueDateFactory,
-)
-from mt_tools.notebook.tests.factories.notebook_sat_factories import (
-    NotebookSatelliteFactory,
 )
 from mt_tools.notebook.views.notebook_views import (
     NotebookCreateView,
@@ -130,4 +124,3 @@ class TestNotebookNotebookDatasListView(MontrekListViewTestCase):
 
     def url_kwargs(self):
         return {"pk": self.notebook_factory.get_hub_value_date().pk}
-

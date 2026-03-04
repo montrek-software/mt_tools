@@ -12,153 +12,507 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('baseclasses', '0028_delete_mockmodel'),
+        ("baseclasses", "0028_delete_mockmodel"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='NotebookDataHub',
+            name="NotebookDataHub",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('identifier', models.CharField(default='', max_length=12)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("identifier", models.CharField(default="", max_length=12)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='NotebookFieldsHub',
+            name="NotebookFieldsHub",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('identifier', models.CharField(default='', max_length=12)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("identifier", models.CharField(default="", max_length=12)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='NotebookHub',
+            name="NotebookHub",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('identifier', models.CharField(default='', max_length=12)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("identifier", models.CharField(default="", max_length=12)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='NotebookDataHubValueDate',
+            name="NotebookDataHubValueDate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hub', baseclasses.fields.HubForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hub_value_date', to='notebook.notebookdatahub')),
-                ('value_date_list', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='baseclasses.valuedatelist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "hub",
+                    baseclasses.fields.HubForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hub_value_date",
+                        to="notebook.notebookdatahub",
+                    ),
+                ),
+                (
+                    "value_date_list",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="baseclasses.valuedatelist",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['value_date_list'], name='notebook_no_value_d_c255a9_idx'), models.Index(fields=['hub'], name='notebook_no_hub_id_b8c863_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["value_date_list"],
+                        name="notebook_no_value_d_c255a9_idx",
+                    ),
+                    models.Index(fields=["hub"], name="notebook_no_hub_id_b8c863_idx"),
+                ],
             },
         ),
         migrations.CreateModel(
-            name='NotebookDataSatellite',
+            name="NotebookDataSatellite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('hash_identifier', models.CharField(default='', max_length=64)),
-                ('hash_value', models.CharField(default='', max_length=64)),
-                ('data_line', models.JSONField(blank=True, default=dict)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
-                ('hub_entity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notebook.notebookdatahub')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("hash_identifier", models.CharField(default="", max_length=64)),
+                ("hash_value", models.CharField(default="", max_length=64)),
+                ("data_line", models.JSONField(blank=True, default=dict)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "hub_entity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="notebook.notebookdatahub",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['hash_identifier'], name='notebook_no_hash_id_ccf943_idx'), models.Index(fields=['hash_value'], name='notebook_no_hash_va_720925_idx'), models.Index(fields=['hub_entity'], name='notebook_no_hub_ent_f2a99b_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["hash_identifier"],
+                        name="notebook_no_hash_id_ccf943_idx",
+                    ),
+                    models.Index(
+                        fields=["hash_value"], name="notebook_no_hash_va_720925_idx"
+                    ),
+                    models.Index(
+                        fields=["hub_entity"], name="notebook_no_hub_ent_f2a99b_idx"
+                    ),
+                ],
             },
         ),
         migrations.CreateModel(
-            name='NotebookFieldsHubValueDate',
+            name="NotebookFieldsHubValueDate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hub', baseclasses.fields.HubForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hub_value_date', to='notebook.notebookfieldshub')),
-                ('value_date_list', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='baseclasses.valuedatelist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "hub",
+                    baseclasses.fields.HubForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hub_value_date",
+                        to="notebook.notebookfieldshub",
+                    ),
+                ),
+                (
+                    "value_date_list",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="baseclasses.valuedatelist",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['value_date_list'], name='notebook_no_value_d_2f51b8_idx'), models.Index(fields=['hub'], name='notebook_no_hub_id_5361db_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["value_date_list"],
+                        name="notebook_no_value_d_2f51b8_idx",
+                    ),
+                    models.Index(fields=["hub"], name="notebook_no_hub_id_5361db_idx"),
+                ],
             },
         ),
         migrations.CreateModel(
-            name='NotebookFieldsSatellite',
+            name="NotebookFieldsSatellite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('hash_identifier', models.CharField(default='', max_length=64)),
-                ('hash_value', models.CharField(default='', max_length=64)),
-                ('field_name', models.CharField(max_length=256)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
-                ('hub_entity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notebook.notebookfieldshub')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("hash_identifier", models.CharField(default="", max_length=64)),
+                ("hash_value", models.CharField(default="", max_length=64)),
+                ("field_name", models.CharField(max_length=256)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "hub_entity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="notebook.notebookfieldshub",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['hash_identifier'], name='notebook_no_hash_id_178afa_idx'), models.Index(fields=['hash_value'], name='notebook_no_hash_va_8f78fa_idx'), models.Index(fields=['hub_entity'], name='notebook_no_hub_ent_55ad36_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["hash_identifier"],
+                        name="notebook_no_hash_id_178afa_idx",
+                    ),
+                    models.Index(
+                        fields=["hash_value"], name="notebook_no_hash_va_8f78fa_idx"
+                    ),
+                    models.Index(
+                        fields=["hub_entity"], name="notebook_no_hub_ent_55ad36_idx"
+                    ),
+                ],
             },
         ),
         migrations.CreateModel(
-            name='NotebookHubValueDate',
+            name="NotebookHubValueDate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hub', baseclasses.fields.HubForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hub_value_date', to='notebook.notebookhub')),
-                ('value_date_list', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='baseclasses.valuedatelist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "hub",
+                    baseclasses.fields.HubForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hub_value_date",
+                        to="notebook.notebookhub",
+                    ),
+                ),
+                (
+                    "value_date_list",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="baseclasses.valuedatelist",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['value_date_list'], name='notebook_no_value_d_9cfe52_idx'), models.Index(fields=['hub'], name='notebook_no_hub_id_6465d1_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["value_date_list"],
+                        name="notebook_no_value_d_9cfe52_idx",
+                    ),
+                    models.Index(fields=["hub"], name="notebook_no_hub_id_6465d1_idx"),
+                ],
             },
         ),
         migrations.CreateModel(
-            name='NotebookSatellite',
+            name="NotebookSatellite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('state_date_start', models.DateTimeField(default=datetime.datetime(1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc))),
-                ('state_date_end', models.DateTimeField(default=datetime.datetime(9999, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc))),
-                ('comment', models.CharField(blank=True, default='', max_length=255)),
-                ('hash_identifier', models.CharField(default='', max_length=64)),
-                ('hash_value', models.CharField(default='', max_length=64)),
-                ('notebook_name', models.CharField(max_length=256)),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='%(class)s', to=settings.AUTH_USER_MODEL)),
-                ('hub_entity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notebook.notebookhub')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "state_date_start",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                        )
+                    ),
+                ),
+                (
+                    "state_date_end",
+                    models.DateTimeField(
+                        default=datetime.datetime(
+                            9999,
+                            12,
+                            31,
+                            23,
+                            59,
+                            59,
+                            999999,
+                            tzinfo=datetime.timezone.utc,
+                        )
+                    ),
+                ),
+                ("comment", models.CharField(blank=True, default="", max_length=255)),
+                ("hash_identifier", models.CharField(default="", max_length=64)),
+                ("hash_value", models.CharField(default="", max_length=64)),
+                ("notebook_name", models.CharField(max_length=256)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="%(class)s",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "hub_entity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="notebook.notebookhub",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'indexes': [models.Index(fields=['hash_identifier'], name='notebook_no_hash_id_f57963_idx'), models.Index(fields=['hash_value'], name='notebook_no_hash_va_bbb9d5_idx'), models.Index(fields=['hub_entity'], name='notebook_no_hub_ent_2af57e_idx')],
+                "abstract": False,
+                "indexes": [
+                    models.Index(
+                        fields=["hash_identifier"],
+                        name="notebook_no_hash_id_f57963_idx",
+                    ),
+                    models.Index(
+                        fields=["hash_value"], name="notebook_no_hash_va_bbb9d5_idx"
+                    ),
+                    models.Index(
+                        fields=["hub_entity"], name="notebook_no_hub_ent_2af57e_idx"
+                    ),
+                ],
             },
         ),
     ]

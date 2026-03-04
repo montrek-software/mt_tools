@@ -50,6 +50,7 @@ class NotebookDataListView(views.MontrekListView):
         )
         return (action_new,)
 
+
 class NotebookDataDetailView(views.MontrekDetailView):
     manager_class = NotebookDataDetailsManager
     page_class = NotebookDataDetailsPage

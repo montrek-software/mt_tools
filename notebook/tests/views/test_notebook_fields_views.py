@@ -86,4 +86,3 @@ class TestNotebookFieldsHistoryView(MontrekViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.hub_vd.id}
-

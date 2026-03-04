@@ -7,7 +7,6 @@ from baseclasses.dataclasses.view_classes import CreateActionElement
 from baseclasses import views
 from baseclasses.dataclasses.view_classes import (
     ActionElement,
-    CreateActionElement,
     ListActionElement,
 )
 from django.urls import reverse
@@ -19,7 +18,6 @@ from mt_tools.notebook.managers.notebook_managers import (
     NotebookTableManager,
 )
 from mt_tools.notebook.pages.notebook_pages import NotebookDetailsPage, NotebookPage
-from mt_tools.notebook.repositories.notebook_repositories import NotebookRepository
 from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsCreateView
 
 
@@ -154,4 +152,3 @@ class NotebookNotebookDataCreateView(NotebookDataCreateView):
         )
         form["link_notebook_data_notebook"].initial = hub
         return form
-

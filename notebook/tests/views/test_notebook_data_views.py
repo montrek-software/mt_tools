@@ -5,8 +5,12 @@ from testing.test_cases.view_test_cases import (
     MontrekListViewTestCase,
     MontrekDeleteViewTestCase,
 )
-from mt_tools.notebook.tests.factories.notebook_data_hub_factories import NotebookDataHubValueDateFactory
-from mt_tools.notebook.tests.factories.notebook_data_sat_factories import NotebookDataSatelliteFactory
+from mt_tools.notebook.tests.factories.notebook_data_hub_factories import (
+    NotebookDataHubValueDateFactory,
+)
+from mt_tools.notebook.tests.factories.notebook_data_sat_factories import (
+    NotebookDataSatelliteFactory,
+)
 from mt_tools.notebook.views.notebook_data_views import NotebookDataCreateView
 from mt_tools.notebook.views.notebook_data_views import NotebookDataUpdateView
 from mt_tools.notebook.views.notebook_data_views import NotebookDataListView
@@ -55,7 +59,6 @@ class TestNotebookDataDeleteView(MontrekDeleteViewTestCase):
 
     def url_kwargs(self) -> dict:
         return {"pk": self.sat_obj.get_hub_value_date().id}
-
 
 
 class TestNotebookDataDetailView(MontrekViewTestCase):

@@ -42,4 +42,3 @@ class NotebookFieldsDetailsPage(MontrekDetailsPage):
                 html_id="tab_notebook_fields_history",
             ),
         )
-

@@ -56,17 +56,14 @@ urlpatterns = [
         NotebookNotebookFieldsCreateView.as_view(),
         name="notebook_notebook_fields_create",
     ),
-path(
+    path(
         "notebook/<int:pk>/notebook_datas/list",
         NotebookNotebookDatasListView.as_view(),
-        name="notebook_notebook_datas_list"
+        name="notebook_notebook_datas_list",
     ),
     path(
         "notebook/<int:pk>/notebook_data/create",
         NotebookNotebookDataCreateView.as_view(),
-        name="notebook_notebook_data_create"
+        name="notebook_notebook_data_create",
     ),
-
-    ]
-    
-
+]

@@ -56,4 +56,3 @@ class NotebookDataDetailsManager(CommonTableElementsMixin, MontrekDetailsManager
         ]
         table_elements += super().table_elements
         return table_elements
-

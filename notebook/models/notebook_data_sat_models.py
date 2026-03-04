@@ -10,4 +10,3 @@ class NotebookDataSatellite(MontrekSatelliteABC):
     data_row = models.JSONField(default=dict, blank=True)
 
     identifier_fields = ["hub_entity_id"]
-

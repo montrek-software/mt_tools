@@ -11,7 +11,7 @@ urlpatterns = [
     path(
         "notebook_fields",
         lambda _: redirect("notebook_fields_list"),
-        name="notebook_fields"
+        name="notebook_fields",
     ),
     path(
         "notebook_fields/list",

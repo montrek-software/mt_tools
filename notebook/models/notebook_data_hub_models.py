@@ -20,4 +20,3 @@ class NotebookDataHubValueDate(HubValueDate):
 class LinkNotebookDataNotebook(MontrekOneToManyLinkABC):
     hub_in = models.ForeignKey(NotebookDataHub, on_delete=models.CASCADE)
     hub_out = models.ForeignKey(NotebookHub, on_delete=models.CASCADE)
-

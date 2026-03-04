@@ -16,7 +16,7 @@ class NotebookHubFactory(MontrekHubFactory):
 
 class NotebookHubValueDateFactory(MontrekHubValueDateFactory):
     class Meta:
-      model = NotebookHubValueDate
+        model = NotebookHubValueDate
 
     hub = factory.SubFactory(NotebookHubFactory)
     value_date_list = factory.SubFactory(ValueDateListFactory)

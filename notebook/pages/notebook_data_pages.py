@@ -1,11 +1,14 @@
 from django.urls import reverse
 from baseclasses.dataclasses.view_classes import TabElement
 from baseclasses.pages import MontrekDetailsPage, MontrekPage
-from mt_tools.notebook.repositories.notebook_data_repositories import NotebookDataRepository
+from mt_tools.notebook.repositories.notebook_data_repositories import (
+    NotebookDataRepository,
+)
 
-PAGE_TITLE="Notebook Data"
-LIST_TAB_NAME="Notebook Data"
-DETAILS_TAB_NAME="Notebook Data"
+PAGE_TITLE = "Notebook Data"
+LIST_TAB_NAME = "Notebook Data"
+DETAILS_TAB_NAME = "Notebook Data"
+
 
 class NotebookDataPage(MontrekPage):
     page_title = PAGE_TITLE

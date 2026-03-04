@@ -6,7 +6,9 @@ from baseclasses.tests.factories.montrek_factory_schemas import (
     MontrekHubFactory,
 )
 from mt_tools.notebook.models.notebook_fields_hub_models import NotebookFieldsHub
-from mt_tools.notebook.models.notebook_fields_hub_models import NotebookFieldsHubValueDate
+from mt_tools.notebook.models.notebook_fields_hub_models import (
+    NotebookFieldsHubValueDate,
+)
 
 
 class NotebookFieldsHubFactory(MontrekHubFactory):
@@ -16,7 +18,7 @@ class NotebookFieldsHubFactory(MontrekHubFactory):
 
 class NotebookFieldsHubValueDateFactory(MontrekHubValueDateFactory):
     class Meta:
-      model = NotebookFieldsHubValueDate
+        model = NotebookFieldsHubValueDate
 
     hub = factory.SubFactory(NotebookFieldsHubFactory)
     value_date_list = factory.SubFactory(ValueDateListFactory)
