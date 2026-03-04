@@ -32,3 +32,14 @@ class NotebookDataCreateForm(MontrekCreateForm):
             link_name="link_notebook_data_notebook",
             queryset=notebooks_query,
         )
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        keys_to_extract = {"hub_entity_id", "link_notebook_data_notebook"}
+        data_row = {
+            k: cleaned_data.pop(k)
+            for k in list(cleaned_data)
+            if k not in keys_to_extract
+        }
+        cleaned_data["data_row"] = data_row
+        return cleaned_data
