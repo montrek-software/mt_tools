@@ -7,13 +7,22 @@ from mt_tools.notebook.repositories.notebook_data_repositories import (
 from mt_tools.notebook.repositories.notebook_repositories import NotebookRepository
 
 
+TEXTAREA_WIDGET = forms.Textarea(
+    attrs={
+        "id": "id_value",
+        "class": "form-control",
+        "rows": 4,
+        "style": "resize: vertical;",
+    }
+)
+
+
 class NotebookDataBaseForm(MontrekCreateForm):
     class Meta:
         exclude = ("data_row", "comment")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         notebooks_query = NotebookRepository(self.session_data).receive()
         self.get_data_fields(notebooks_query)
         self.add_link_choice_field(
@@ -23,6 +32,13 @@ class NotebookDataBaseForm(MontrekCreateForm):
         )
 
     def get_data_fields(self, notebooks_query: QuerySet) -> None: ...
+
+    def _add_fields_from_field_names(self, field_names: str) -> None:
+        for field in field_names.split(";"):
+            self.fields[field] = forms.CharField(
+                required=False,
+                widget=TEXTAREA_WIDGET,
+            )
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -39,21 +55,10 @@ class NotebookDataBaseForm(MontrekCreateForm):
 class NotebookDataCreateForm(NotebookDataBaseForm):
     def get_data_fields(self, notebooks_query: QuerySet) -> None:
         if "pk" in self.session_data:
-            fields = notebooks_query.get(
+            field_names = notebooks_query.get(
                 hub_entity_id=self.session_data["pk"]
             ).field_name
-            for field in fields.split(";"):
-                self.fields[field] = forms.CharField(
-                    required=False,
-                    widget=forms.Textarea(
-                        attrs={
-                            "id": "id_value",
-                            "class": "form-control",
-                            "rows": 4,
-                            "style": "resize: vertical;",
-                        }
-                    ),
-                )
+            self._add_fields_from_field_names(field_names)
 
 
 class NotebookDataUpdateForm(NotebookDataBaseForm):
@@ -63,19 +68,8 @@ class NotebookDataUpdateForm(NotebookDataBaseForm):
             .receive()
             .get(pk=self.session_data["pk"])
         )
-
-        fields = notebooks_query.get(hub_entity_id=notebook_data.notebook_id).field_name
-
-        for field in fields.split(";"):
-            self.fields[field] = forms.CharField(
-                required=False,
-                widget=forms.Textarea(
-                    attrs={
-                        "id": "id_value",
-                        "class": "form-control",
-                        "rows": 4,
-                        "style": "resize: vertical;",
-                    }
-                ),
-            )
+        field_names = notebooks_query.get(
+            hub_entity_id=notebook_data.notebook_id
+        ).field_name
+        self._add_fields_from_field_names(field_names)
         self.initial.update(notebook_data.data_row)
