@@ -25,7 +25,10 @@ class NotebookFieldsRepository(MontrekRepository):
 
 class NotebookNotebookFieldssRepository(NotebookFieldsRepository):
     def receive(self, apply_filter=True):
-        notebook_hub = NotebookHubValueDate.objects.get(
-            pk=self.session_data.get("pk")
-        ).hub
-        return super().receive(apply_filter).filter(notebook_id=notebook_hub.id)
+        if not hasattr(self, "_notebook_hub_id"):
+            self._notebook_hub_id = NotebookHubValueDate.objects.values_list(
+                "hub_id", flat=True
+            ).get(pk=self.session_data.get("pk"))
+        return super().receive(apply_filter).filter(
+            notebook_id=self._notebook_hub_id
+        )
