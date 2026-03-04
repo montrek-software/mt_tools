@@ -65,6 +65,7 @@ class NotebookDataUpdateForm(NotebookDataBaseForm):
         )
 
         fields = notebooks_query.get(hub_entity_id=notebook_data.notebook_id).field_name
+
         for field in fields.split(";"):
             self.fields[field] = forms.CharField(
                 required=False,
@@ -77,3 +78,4 @@ class NotebookDataUpdateForm(NotebookDataBaseForm):
                     }
                 ),
             )
+        self.initial.update(notebook_data.data_row)
