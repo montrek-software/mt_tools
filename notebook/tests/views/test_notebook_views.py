@@ -1,4 +1,7 @@
-from mt_tools.notebook.views.notebook_views import NotebookNotebookDatasListView
+from mt_tools.notebook.views.notebook_views import (
+    NotebookNotebookDataCreateView,
+    NotebookNotebookDatasListView,
+)
 from mt_tools.notebook.tests.factories.notebook_sat_factories import (
     NotebookSatelliteFactory,
 )
@@ -124,3 +127,17 @@ class TestNotebookNotebookDatasListView(MontrekListViewTestCase):
 
     def url_kwargs(self):
         return {"pk": self.notebook_factory.get_hub_value_date().pk}
+
+
+class TestNotebookNotebookDataCreateView(MontrekCreateViewTestCase):
+    viewname = "notebook_notebook_data_create"
+    view_class = NotebookNotebookDataCreateView
+
+    def creation_data(self):
+        return {}
+
+    def build_factories(self):
+        self.notebook_factory = NotebookSatelliteFactory.create()
+
+    def url_kwargs(self):
+        return {"pk": self.notebook_factory.hub_entity.pk}
