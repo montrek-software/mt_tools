@@ -1,3 +1,6 @@
+from mt_tools.notebook.dataclasses.notebook_table_elements import (
+    NotebookFieldTableElement,
+)
 from mt_tools.notebook.repositories.notebook_repositories import (
     NotebookNotebookDatasRepository,
 )
@@ -74,3 +77,34 @@ class NotebookNotebookFieldssTableManager(NotebookFieldsTableManager):
 
 class NotebookNotebookDatasTableManager(NotebookDataTableManager):
     repository_class = NotebookNotebookDatasRepository
+
+    @property
+    def table_elements(self):
+        table_elements = []
+        notebook = (
+            NotebookRepository(self.session_data)
+            .receive()
+            .get(pk=self.session_data["pk"])
+        )
+        fields = notebook.field_name
+        if fields is not None:
+            for field in fields.split(";"):
+                table_elements.append(NotebookFieldTableElement(name=field, attr=field))
+
+        table_elements += [
+            te.LinkTableElement(
+                name="Edit",
+                url="notebook_data_update",
+                icon="edit",
+                kwargs={"pk": "id"},
+                hover_text="Update Notebook Data",
+            ),
+            te.LinkTableElement(
+                name="Delete",
+                url="notebook_data_delete",
+                icon="trash",
+                kwargs={"pk": "id"},
+                hover_text="Delete Notebook Data",
+            ),
+        ]
+        return table_elements

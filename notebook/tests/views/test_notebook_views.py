@@ -1,4 +1,7 @@
-from mt_tools.notebook.views.notebook_views import NotebookNotebookDatasListView
+from mt_tools.notebook.views.notebook_views import (
+    NotebookNotebookDataCreateView,
+    NotebookNotebookDatasListView,
+)
 from mt_tools.notebook.tests.factories.notebook_sat_factories import (
     NotebookSatelliteFactory,
 )
@@ -118,9 +121,43 @@ class TestNotebookNotebookDatasListView(MontrekListViewTestCase):
 
     def build_factories(self):
         self.notebook_factory = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_a"
+        )
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_b"
+        )
         NotebookDataSatelliteFactory.create_batch(5, notebook=self.notebook_factory)
         other_notebook_factory = NotebookSatelliteFactory.create()
         NotebookDataSatelliteFactory.create_batch(5, notebook=other_notebook_factory)
 
     def url_kwargs(self):
         return {"pk": self.notebook_factory.get_hub_value_date().pk}
+
+
+class TestNotebookNotebookDataCreateView(MontrekCreateViewTestCase):
+    viewname = "notebook_notebook_data_create"
+    view_class = NotebookNotebookDataCreateView
+
+    def creation_data(self):
+        return {"field_a": "Hallo", "field_b": "Wallo"}
+
+    def build_factories(self):
+        self.notebook_factory = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_a"
+        )
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_b"
+        )
+
+    def url_kwargs(self):
+        return {"pk": self.notebook_factory.hub_entity.pk}
+
+    def test_view_post_success(self):
+        if not self._pre_test_view_post_success():
+            return
+        # Check added data
+        created_object = self._get_object()
+        data = self.creation_data()
+        self.assertEqual(created_object.data_row, data)

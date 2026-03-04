@@ -5,7 +5,10 @@ from mt_tools.notebook.managers.notebook_data_managers import NotebookDataTableM
 from mt_tools.notebook.managers.notebook_data_managers import NotebookDataDetailsManager
 from mt_tools.notebook.pages.notebook_data_pages import NotebookDataPage
 from mt_tools.notebook.pages.notebook_data_pages import NotebookDataDetailsPage
-from mt_tools.notebook.forms.notebook_data_forms import NotebookDataCreateForm
+from mt_tools.notebook.forms.notebook_data_forms import (
+    NotebookDataCreateForm,
+    NotebookDataUpdateForm,
+)
 
 
 class NotebookDataCreateView(views.MontrekCreateView):
@@ -21,7 +24,7 @@ class NotebookDataUpdateView(views.MontrekUpdateView):
     manager_class = NotebookDataTableManager
     page_class = NotebookDataPage
     tab = "tab_notebook_data_list"
-    form_class = NotebookDataCreateForm
+    form_class = NotebookDataUpdateForm
     success_url = "notebook_data_list"
     title = "Notebook Data Update"
 
