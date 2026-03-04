@@ -1,3 +1,7 @@
+from mt_tools.notebook.models.notebook_fields_hub_models import (
+    LinkNotebookFieldsNotebook,
+)
+from mt_tools.notebook.models.notebook_fields_sat_models import NotebookFieldsSatellite
 from mt_tools.notebook.repositories.notebook_data_repositories import (
     NotebookDataRepository,
 )
@@ -12,6 +16,12 @@ class NotebookRepository(MontrekRepository):
 
     def set_annotations(self):
         self.add_satellite_fields_annotations(NotebookSatellite, ["notebook_name"])
+        self.add_linked_satellites_field_annotations(
+            NotebookFieldsSatellite,
+            LinkNotebookFieldsNotebook,
+            ["field_name"],
+            reversed_link=True,
+        )
 
 
 class NotebookNotebookDatasRepository(NotebookDataRepository):
