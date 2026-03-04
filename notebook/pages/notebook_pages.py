@@ -3,9 +3,10 @@ from baseclasses.dataclasses.view_classes import TabElement
 from baseclasses.pages import MontrekDetailsPage, MontrekPage
 from mt_tools.notebook.repositories.notebook_repositories import NotebookRepository
 
-PAGE_TITLE="Notebook"
-LIST_TAB_NAME="Notebook"
-DETAILS_TAB_NAME="Notebook"
+PAGE_TITLE = "Notebook"
+LIST_TAB_NAME = "Notebook"
+DETAILS_TAB_NAME = "Notebook"
+
 
 class NotebookPage(MontrekPage):
     page_title = PAGE_TITLE
@@ -23,7 +24,7 @@ class NotebookPage(MontrekPage):
 
 class NotebookDetailsPage(MontrekDetailsPage):
     repository_class = NotebookRepository
-    title_field = "hub_entity_id"
+    title_field = "notebook_name"
 
     def get_tabs(self):
         return (
@@ -32,6 +33,11 @@ class NotebookDetailsPage(MontrekDetailsPage):
                 link=reverse("notebook_details", args=[self.obj.id]),
                 html_id="tab_notebook_details",
                 active="active",
+            ),
+            TabElement(
+                name="Fields",
+                link=reverse("notebook_notebook_fieldss_list", args=[self.obj.id]),
+                html_id="tab_notebook_notebook_fieldss",
             ),
             TabElement(
                 name="History",

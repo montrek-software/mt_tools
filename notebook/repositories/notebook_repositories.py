@@ -1,3 +1,7 @@
+from mt_tools.notebook.repositories.notebook_fields_repositories import (
+    NotebookFieldsRepository,
+)
+from mt_tools.notebook.models.notebook_hub_models import NotebookHubValueDate
 from baseclasses.repositories.montrek_repository import MontrekRepository
 from mt_tools.notebook.models.notebook_sat_models import NotebookSatellite
 from mt_tools.notebook.models.notebook_hub_models import NotebookHub

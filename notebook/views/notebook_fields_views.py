@@ -1,11 +1,16 @@
-from django.urls import reverse
-from baseclasses.dataclasses.view_classes import ActionElement, ListActionElement
 from baseclasses import views
-from mt_tools.notebook.managers.notebook_fields_managers import NotebookFieldsTableManager
-from mt_tools.notebook.managers.notebook_fields_managers import NotebookFieldsDetailsManager
-from mt_tools.notebook.pages.notebook_fields_pages import NotebookFieldsPage
-from mt_tools.notebook.pages.notebook_fields_pages import NotebookFieldsDetailsPage
+from baseclasses.dataclasses.view_classes import ActionElement, ListActionElement
+from django.urls import reverse
+
 from mt_tools.notebook.forms.notebook_fields_forms import NotebookFieldsCreateForm
+from mt_tools.notebook.managers.notebook_fields_managers import (
+    NotebookFieldsDetailsManager,
+    NotebookFieldsTableManager,
+)
+from mt_tools.notebook.pages.notebook_fields_pages import (
+    NotebookFieldsDetailsPage,
+    NotebookFieldsPage,
+)
 
 
 class NotebookFieldsCreateView(views.MontrekCreateView):
@@ -15,6 +20,7 @@ class NotebookFieldsCreateView(views.MontrekCreateView):
     form_class = NotebookFieldsCreateForm
     success_url = "notebook_fields_list"
     title = "Notebook Fields Create"
+    is_compact_form = True
 
 
 class NotebookFieldsUpdateView(views.MontrekUpdateView):
@@ -24,6 +30,7 @@ class NotebookFieldsUpdateView(views.MontrekUpdateView):
     form_class = NotebookFieldsCreateForm
     success_url = "notebook_fields_list"
     title = "Notebook Fields Update"
+    is_compact_form = True
 
 
 class NotebookFieldsDeleteView(views.MontrekDeleteView):
@@ -49,6 +56,7 @@ class NotebookFieldsListView(views.MontrekListView):
             hover_text="Create new Notebook Fields",
         )
         return (action_new,)
+
 
 class NotebookFieldsDetailView(views.MontrekDetailView):
     manager_class = NotebookFieldsDetailsManager

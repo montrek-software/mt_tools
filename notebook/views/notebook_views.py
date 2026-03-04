@@ -1,11 +1,20 @@
-from django.urls import reverse
-from baseclasses.dataclasses.view_classes import ActionElement, ListActionElement
 from baseclasses import views
-from mt_tools.notebook.managers.notebook_managers import NotebookTableManager
-from mt_tools.notebook.managers.notebook_managers import NotebookDetailsManager
-from mt_tools.notebook.pages.notebook_pages import NotebookPage
-from mt_tools.notebook.pages.notebook_pages import NotebookDetailsPage
+from baseclasses.dataclasses.view_classes import (
+    ActionElement,
+    CreateActionElement,
+    ListActionElement,
+)
+from django.urls import reverse
+
 from mt_tools.notebook.forms.notebook_forms import NotebookCreateForm
+from mt_tools.notebook.managers.notebook_managers import (
+    NotebookDetailsManager,
+    NotebookNotebookFieldssTableManager,
+    NotebookTableManager,
+)
+from mt_tools.notebook.pages.notebook_pages import NotebookDetailsPage, NotebookPage
+from mt_tools.notebook.repositories.notebook_repositories import NotebookRepository
+from mt_tools.notebook.views.notebook_fields_views import NotebookFieldsCreateView
 
 
 class NotebookCreateView(views.MontrekCreateView):
@@ -50,6 +59,7 @@ class NotebookListView(views.MontrekListView):
         )
         return (action_new,)
 
+
 class NotebookDetailView(views.MontrekDetailView):
     manager_class = NotebookDetailsManager
     page_class = NotebookDetailsPage
@@ -72,3 +82,37 @@ class NotebookHistoryView(views.MontrekHistoryListView):
     def actions(self) -> tuple:
         action_back = ListActionElement("notebook_list")
         return (action_back,)
+
+
+class NotebookNotebookFieldssListView(views.MontrekListView):
+    manager_class = NotebookNotebookFieldssTableManager
+    page_class = NotebookDetailsPage
+    title = "Notebook Fields"
+    tab = "tab_notebook_notebook_fieldss"
+
+    @property
+    def actions(self) -> tuple[ActionElement]:
+        action_create = CreateActionElement(
+            url_name="notebook_notebook_fields_create",
+            kwargs={"pk": self.kwargs["pk"]},
+            action_id="id_notebook_fields_notebook_create",
+            hover_text="Create NotebookFields from Notebook",
+        )
+        return (action_create,)
+
+
+class NotebookNotebookFieldsCreateView(NotebookFieldsCreateView):
+    def get_success_url(self):
+        return reverse(
+            "notebook_notebook_fieldss_list", kwargs={"pk": self.kwargs["pk"]}
+        )
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        hub = (
+            NotebookRepository(self.session_data)
+            .receive()
+            .get(hub__pk=self.kwargs["pk"])
+        )
+        form["link_notebook_fields_notebook"].initial = hub
+        return form

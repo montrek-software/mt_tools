@@ -1,7 +1,10 @@
 from reporting.dataclasses import table_elements as te
 from reporting.managers.montrek_table_manager import MontrekTableManager
 from reporting.managers.montrek_details_manager import MontrekDetailsManager
-from mt_tools.notebook.repositories.notebook_fields_repositories import NotebookFieldsRepository
+from mt_tools.notebook.repositories.notebook_fields_repositories import (
+    NotebookFieldsRepository,
+)
+
 
 class CommonTableElementsMixin:
     @property
@@ -23,6 +26,7 @@ class CommonTableElementsMixin:
             ),
         ]
 
+
 class NotebookFieldsTableManager(CommonTableElementsMixin, MontrekTableManager):
     repository_class = NotebookFieldsRepository
 
@@ -30,10 +34,10 @@ class NotebookFieldsTableManager(CommonTableElementsMixin, MontrekTableManager):
     def table_elements(self):
         table_elements = [
             te.LinkTextTableElement(
-                name="Details",
+                name="Name",
                 url="notebook_fields_details",
                 kwargs={"pk": "hub_id"},
-                text="hub_entity_id",
+                text="field_name",
                 hover_text="View Notebook Fields Details",
             ),
         ]
@@ -47,7 +51,8 @@ class NotebookFieldsDetailsManager(CommonTableElementsMixin, MontrekDetailsManag
     @property
     def table_elements(self):
         table_elements = [
-            te.StringTableElement(name="hub", attr="hub_entity_id"),
+            te.StringTableElement(name="Name", attr="field_name"),
         ]
         table_elements += super().table_elements
         return table_elements
+

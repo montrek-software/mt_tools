@@ -1,18 +1,19 @@
 from django.shortcuts import redirect
 from django.urls import path
-from mt_tools.notebook.views.notebook_views import NotebookListView
-from mt_tools.notebook.views.notebook_views import NotebookCreateView
-from mt_tools.notebook.views.notebook_views import NotebookUpdateView
-from mt_tools.notebook.views.notebook_views import NotebookDeleteView
-from mt_tools.notebook.views.notebook_views import NotebookDetailView
-from mt_tools.notebook.views.notebook_views import NotebookHistoryView
+
+from mt_tools.notebook.views.notebook_views import (
+    NotebookCreateView,
+    NotebookDeleteView,
+    NotebookDetailView,
+    NotebookHistoryView,
+    NotebookListView,
+    NotebookNotebookFieldsCreateView,
+    NotebookNotebookFieldssListView,
+    NotebookUpdateView,
+)
 
 urlpatterns = [
-    path(
-        "notebook",
-        lambda _: redirect("notebook_list"),
-        name="notebook"
-    ),
+    path("notebook", lambda _: redirect("notebook_list"), name="notebook"),
     path(
         "notebook/list",
         NotebookListView.as_view(),
@@ -43,4 +44,15 @@ urlpatterns = [
         NotebookHistoryView.as_view(),
         name="notebook_history",
     ),
+    path(
+        "notebook/<int:pk>/notebook_fieldss/list",
+        NotebookNotebookFieldssListView.as_view(),
+        name="notebook_notebook_fieldss_list",
+    ),
+    path(
+        "notebook/<int:pk>/notebook_fields/create",
+        NotebookNotebookFieldsCreateView.as_view(),
+        name="notebook_notebook_fields_create",
+    ),
 ]
+

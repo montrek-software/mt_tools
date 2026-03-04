@@ -1,11 +1,14 @@
 from django.urls import reverse
 from baseclasses.dataclasses.view_classes import TabElement
 from baseclasses.pages import MontrekDetailsPage, MontrekPage
-from mt_tools.notebook.repositories.notebook_fields_repositories import NotebookFieldsRepository
+from mt_tools.notebook.repositories.notebook_fields_repositories import (
+    NotebookFieldsRepository,
+)
 
-PAGE_TITLE="Notebook Fields"
-LIST_TAB_NAME="Notebook Fields"
-DETAILS_TAB_NAME="Notebook Fields"
+PAGE_TITLE = "Notebook Field"
+LIST_TAB_NAME = "Notebook Field"
+DETAILS_TAB_NAME = "Notebook Field"
+
 
 class NotebookFieldsPage(MontrekPage):
     page_title = PAGE_TITLE
@@ -39,3 +42,4 @@ class NotebookFieldsDetailsPage(MontrekDetailsPage):
                 html_id="tab_notebook_fields_history",
             ),
         )
+
