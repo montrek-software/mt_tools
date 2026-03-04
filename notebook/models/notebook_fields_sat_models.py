@@ -6,3 +6,8 @@ from mt_tools.notebook.models.notebook_fields_hub_models import NotebookFieldsHu
 
 class NotebookFieldsSatellite(MontrekSatelliteABC):
     hub_entity = models.ForeignKey(NotebookFieldsHub, on_delete=models.CASCADE)
+
+    field_name = models.CharField(max_length=256)
+
+    identifier_fields = ["field_name"]
+

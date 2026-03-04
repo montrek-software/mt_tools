@@ -7,4 +7,5 @@ class NotebookRepository(MontrekRepository):
     hub_class = NotebookHub
 
     def set_annotations(self):
-        pass
+        self.add_satellite_fields_annotations(NotebookSatellite, ["notebook_name"])
+
