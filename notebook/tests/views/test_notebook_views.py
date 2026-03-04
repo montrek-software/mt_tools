@@ -138,6 +138,12 @@ class TestNotebookNotebookDataCreateView(MontrekCreateViewTestCase):
 
     def build_factories(self):
         self.notebook_factory = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_a"
+        )
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_b"
+        )
 
     def url_kwargs(self):
         return {"pk": self.notebook_factory.hub_entity.pk}
