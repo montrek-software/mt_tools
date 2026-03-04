@@ -64,7 +64,10 @@ class TestNotebookDataListView(MontrekListViewTestCase):
     expected_no_of_rows = 1
 
     def build_factories(self):
-        self.sat_obj = NotebookDataSatelliteFactory()
+        notebook = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(notebook=notebook, field_name="field_a")
+        NotebookFieldsSatelliteFactory(notebook=notebook, field_name="field_b")
+        self.sat_obj = NotebookDataSatelliteFactory(notebook=notebook)
 
 
 class TestNotebookDataDeleteView(MontrekDeleteViewTestCase):

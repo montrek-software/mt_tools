@@ -121,6 +121,12 @@ class TestNotebookNotebookDatasListView(MontrekListViewTestCase):
 
     def build_factories(self):
         self.notebook_factory = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_a"
+        )
+        NotebookFieldsSatelliteFactory(
+            notebook=self.notebook_factory, field_name="field_b"
+        )
         NotebookDataSatelliteFactory.create_batch(5, notebook=self.notebook_factory)
         other_notebook_factory = NotebookSatelliteFactory.create()
         NotebookDataSatelliteFactory.create_batch(5, notebook=other_notebook_factory)

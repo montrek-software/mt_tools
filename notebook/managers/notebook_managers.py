@@ -87,8 +87,9 @@ class NotebookNotebookDatasTableManager(NotebookDataTableManager):
             .get(pk=self.session_data["pk"])
         )
         fields = notebook.field_name
-        for field in fields.split(";"):
-            table_elements.append(NotebookFieldTableElement(name=field, attr=field))
+        if fields is not None:
+            for field in fields.split(";"):
+                table_elements.append(NotebookFieldTableElement(name=field, attr=field))
 
         table_elements += [
             te.LinkTableElement(
