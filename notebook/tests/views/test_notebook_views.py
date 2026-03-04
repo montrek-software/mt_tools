@@ -134,7 +134,7 @@ class TestNotebookNotebookDataCreateView(MontrekCreateViewTestCase):
     view_class = NotebookNotebookDataCreateView
 
     def creation_data(self):
-        return {}
+        return {"field_a": "Hallo", "field_b": "Wallo"}
 
     def build_factories(self):
         self.notebook_factory = NotebookSatelliteFactory.create()
@@ -147,3 +147,11 @@ class TestNotebookNotebookDataCreateView(MontrekCreateViewTestCase):
 
     def url_kwargs(self):
         return {"pk": self.notebook_factory.hub_entity.pk}
+
+    def test_view_post_success(self):
+        if not self._pre_test_view_post_success():
+            return
+        # Check added data
+        created_object = self._get_object()
+        data = self.creation_data()
+        self.assertEqual(created_object.data_row, data)
