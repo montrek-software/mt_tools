@@ -9,7 +9,6 @@ from mt_tools.notebook.repositories.notebook_repositories import NotebookReposit
 
 TEXTAREA_WIDGET = forms.Textarea(
     attrs={
-        "id": "id_value",
         "class": "form-control",
         "rows": 4,
         "style": "resize: vertical;",
@@ -33,7 +32,9 @@ class NotebookDataBaseForm(MontrekCreateForm):
 
     def get_data_fields(self, notebooks_query: QuerySet) -> None: ...
 
-    def _add_fields_from_field_names(self, field_names: str) -> None:
+    def _add_fields_from_field_names(self, field_names: str | None) -> None:
+        if field_names is None:
+            return
         for field in field_names.split(";"):
             self.fields[field] = forms.CharField(
                 required=False,
