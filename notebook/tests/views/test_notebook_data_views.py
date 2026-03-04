@@ -1,3 +1,9 @@
+from mt_tools.notebook.tests.factories.notebook_fields_sat_factories import (
+    NotebookFieldsSatelliteFactory,
+)
+from mt_tools.notebook.tests.factories.notebook_sat_factories import (
+    NotebookSatelliteFactory,
+)
 from testing.test_cases.view_test_cases import (
     MontrekCreateViewTestCase,
     MontrekUpdateViewTestCase,
@@ -32,13 +38,24 @@ class TestNotebookDataUpdateView(MontrekUpdateViewTestCase):
     view_class = NotebookDataUpdateView
 
     def build_factories(self):
-        self.sat_obj = NotebookDataSatelliteFactory()
+        notebook = NotebookSatelliteFactory.create()
+        NotebookFieldsSatelliteFactory(notebook=notebook, field_name="field_a")
+        NotebookFieldsSatelliteFactory(notebook=notebook, field_name="field_b")
+        self.sat_obj = NotebookDataSatelliteFactory(notebook=notebook)
 
     def url_kwargs(self) -> dict:
         return {"pk": self.sat_obj.get_hub_value_date().id}
 
     def update_data(self):
-        return {}
+        return {"field_a": "Hallo", "field_b": "Wallo"}
+
+    def test_view_post_success(self):
+        if not self._pre_test_view_post_success():
+            return
+        # Check added data
+        created_object = self._get_object()
+        data = self.update_data()
+        self.assertEqual(created_object.data_row, data)
 
 
 class TestNotebookDataListView(MontrekListViewTestCase):
