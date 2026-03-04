@@ -1,3 +1,9 @@
+from mt_tools.notebook.managers.notebook_managers import (
+    NotebookNotebookDatasTableManager,
+)
+from mt_tools.notebook.repositories.notebook_repositories import NotebookRepository
+from mt_tools.notebook.views.notebook_data_views import NotebookDataCreateView
+from baseclasses.dataclasses.view_classes import CreateActionElement
 from baseclasses import views
 from baseclasses.dataclasses.view_classes import (
     ActionElement,
@@ -116,3 +122,36 @@ class NotebookNotebookFieldsCreateView(NotebookFieldsCreateView):
         )
         form["link_notebook_fields_notebook"].initial = hub
         return form
+
+
+class NotebookNotebookDatasListView(views.MontrekListView):
+    manager_class = NotebookNotebookDatasTableManager
+    page_class = NotebookDetailsPage
+    title = "Notebook Data"
+    tab = "tab_notebook_notebook_datas"
+
+    @property
+    def actions(self) -> tuple[ActionElement]:
+        action_create = CreateActionElement(
+            url_name="notebook_notebook_data_create",
+            kwargs={"pk": self.kwargs["pk"]},
+            action_id="id_notebook_data_notebook_create",
+            hover_text="Create NotebookData from Notebook",
+        )
+        return (action_create,)
+
+
+class NotebookNotebookDataCreateView(NotebookDataCreateView):
+    def get_success_url(self):
+        return reverse("notebook_notebook_datas_list", kwargs={"pk": self.kwargs["pk"]})
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        hub = (
+            NotebookRepository(self.session_data)
+            .receive()
+            .get(hub__pk=self.kwargs["pk"])
+        )
+        form["link_notebook_data_notebook"].initial = hub
+        return form
+

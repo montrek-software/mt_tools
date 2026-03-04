@@ -1,3 +1,5 @@
+from mt_tools.notebook.repositories.notebook_repositories import NotebookNotebookDatasRepository
+from mt_tools.notebook.managers.notebook_data_managers import NotebookDataTableManager
 from mt_tools.notebook.repositories.notebook_fields_repositories import (
     NotebookNotebookFieldssRepository,
 )
@@ -66,3 +68,6 @@ class NotebookDetailsManager(CommonTableElementsMixin, MontrekDetailsManager):
 
 class NotebookNotebookFieldssTableManager(NotebookFieldsTableManager):
     repository_class = NotebookNotebookFieldssRepository
+class NotebookNotebookDatasTableManager(NotebookDataTableManager):
+    repository_class = NotebookNotebookDatasRepository
+    

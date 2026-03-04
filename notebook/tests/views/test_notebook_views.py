@@ -1,3 +1,6 @@
+from mt_tools.notebook.views.notebook_views import NotebookNotebookDatasListView
+from mt_tools.notebook.tests.factories.notebook_sat_factories import NotebookSatelliteFactory
+from mt_tools.notebook.tests.factories.notebook_data_sat_factories import NotebookDataSatelliteFactory
 from mt_tools.notebook.views.notebook_views import NotebookNotebookFieldssListView
 from mt_tools.notebook.tests.factories.notebook_sat_factories import NotebookSatelliteFactory
 from mt_tools.notebook.tests.factories.notebook_fields_sat_factories import NotebookFieldsSatelliteFactory
@@ -102,6 +105,22 @@ class TestNotebookNotebookFieldssListView(MontrekListViewTestCase):
         )
         other_notebook_factory = NotebookSatelliteFactory.create()
         NotebookFieldsSatelliteFactory.create_batch(
+            5, notebook=other_notebook_factory
+        )
+
+    def url_kwargs(self):
+        return {"pk": self.notebook_factory.get_hub_value_date().pk}class TestNotebookNotebookDatasListView(MontrekListViewTestCase):
+    viewname = "notebook_notebook_datas_list"
+    view_class = NotebookNotebookDatasListView
+    expected_no_of_rows = 5
+
+    def build_factories(self):
+        self.notebook_factory = NotebookSatelliteFactory.create()
+        NotebookDataSatelliteFactory.create_batch(
+            5, notebook=self.notebook_factory
+        )
+        other_notebook_factory = NotebookSatelliteFactory.create()
+        NotebookDataSatelliteFactory.create_batch(
             5, notebook=other_notebook_factory
         )
 

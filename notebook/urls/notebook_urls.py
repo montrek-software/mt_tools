@@ -1,3 +1,5 @@
+from mt_tools.notebook.views.notebook_views import NotebookNotebookDatasListView
+from mt_tools.notebook.views.notebook_views import NotebookNotebookDataCreateView
 from django.shortcuts import redirect
 from django.urls import path
 
@@ -54,5 +56,17 @@ urlpatterns = [
         NotebookNotebookFieldsCreateView.as_view(),
         name="notebook_notebook_fields_create",
     ),
-]
+path(
+        "notebook/<int:pk>/notebook_datas/list",
+        NotebookNotebookDatasListView.as_view(),
+        name="notebook_notebook_datas_list"
+    ),
+    path(
+        "notebook/<int:pk>/notebook_data/create",
+        NotebookNotebookDataCreateView.as_view(),
+        name="notebook_notebook_data_create"
+    ),
+
+    ]
+    
 

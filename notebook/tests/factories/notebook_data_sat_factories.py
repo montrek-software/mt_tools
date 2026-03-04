@@ -12,3 +12,11 @@ class NotebookDataSatelliteFactory(MontrekSatelliteFactory):
         model = NotebookDataSatellite
 
     hub_entity = factory.SubFactory(NotebookDataHubFactory)
+
+    @factory.post_generation
+    def notebook(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if not extracted:
+            return
+        self.hub_entity.link_notebook_data_notebook.add(extracted.hub_entity)

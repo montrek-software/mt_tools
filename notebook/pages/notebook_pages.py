@@ -35,6 +35,11 @@ class NotebookDetailsPage(MontrekDetailsPage):
                 active="active",
             ),
             TabElement(
+                name="Data",
+                link=reverse("notebook_notebook_datas_list", args=[self.obj.id]),
+                html_id="tab_notebook_notebook_datas",
+            ),
+            TabElement(
                 name="Fields",
                 link=reverse("notebook_notebook_fieldss_list", args=[self.obj.id]),
                 html_id="tab_notebook_notebook_fieldss",
