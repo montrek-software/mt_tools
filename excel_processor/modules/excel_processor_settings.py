@@ -27,12 +27,18 @@ def get_excel_processor_settings(
     """Return all available TOML settings files for the given functions class.
 
     Settings files are expected in a ``settings/`` subfolder next to the
-    module that defines *functions_class*.
+    module that defines *functions_class*, or in the path specified by
+    ``settings_path`` variable, if specified.
     """
     if not functions_class.has_settings:
         return []
-    class_file = Path(inspect.getfile(functions_class))
-    settings_folder = class_file.parent / "settings"
+
+    if hasattr(functions_class, 'settings_path') and functions_class.settings_path:
+        settings_folder = Path(functions_class.settings_path)
+    else:
+        class_file = Path(inspect.getfile(functions_class))
+        settings_folder = class_file.parent / "settings"
+
     settings_folder.mkdir(exist_ok=True)
     toml_files = list(settings_folder.glob("*.toml"))
     if not toml_files:
