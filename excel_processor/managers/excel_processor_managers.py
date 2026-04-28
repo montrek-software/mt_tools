@@ -43,13 +43,17 @@ class ExcelProcessor:
         self.excel_processor_functions_class = (
             view_class.excel_processor_functions_class
         )
-        self.processor_function_name = self.session_data["function"][0]
+        function_value = self.session_data["function"]
+        if isinstance(function_value, list):
+            self.processor_function_name = function_value[0]
+        else:
+            self.processor_function_name = function_value
         self.output: None | ExcelProcessorReturn = None
 
-    def pre_check(self, file_path: str) -> bool:
+    def pre_check(self, file_path: str | None) -> bool:
         return True
 
-    def process(self, file_path: str) -> bool:
+    def process(self, file_path: str | None) -> bool:
         processor_function = getattr(
             self.excel_processor_functions_class,
             self.processor_function_name,
@@ -62,7 +66,7 @@ class ExcelProcessor:
         self.message = f"Processed {self.processor_function_name}!"
         return True
 
-    def post_check(self, file_path: str) -> bool:
+    def post_check(self, file_path: str | None) -> bool:
         if self.output is None:
             return False
         output_filename = self._get_filename(file_path=file_path)
@@ -107,9 +111,13 @@ class ExcelProcessor:
         buffer.seek(0)
         return ContentFile(buffer.read(), name=zip_name)
 
-    def _get_filename(self, file_path: str) -> str:
-        safe_name = os.path.basename(file_path)
-        return f"{safe_name.split('.')[0]}__{self.processor_function_name}.{self.output.return_type.value}"
+    def _get_filename(self, file_path: str | None) -> str:
+        if file_path:
+            safe_name = os.path.basename(file_path)
+            base = safe_name.split(".")[0]
+        else:
+            base = self.processor_function_name
+        return f"{base}__{self.processor_function_name}.{self.output.return_type.value}"
 
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
@@ -135,4 +143,26 @@ class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
 class ExcelProcessorManager(FileUploadManagerABC):
     file_upload_processor_class = ExcelProcessor
     file_registry_manager_class = ExcelProcessorRegistryManager
-    do_process_file_async = True
+
+
+try:
+    from django.conf import settings
+    from montrek.celery_app import PARALLEL_QUEUE_NAME
+
+    _manager_setting = getattr(ExcelProcessorManager, "do_process_file_async", None)
+    if _manager_setting is None:
+        _should_register = getattr(settings, "FILE_UPLOAD_PROCESS_ASYNC", True)
+    else:
+        _should_register = bool(_manager_setting)
+
+    if (
+        _should_register
+        and getattr(ExcelProcessorManager, "upload_file_task", None) is None
+    ):
+        ExcelProcessorManager.upload_file_task = (
+            ExcelProcessorManager.upload_file_task_class(
+                manager_class=ExcelProcessorManager, queue=PARALLEL_QUEUE_NAME
+            )
+        )
+except Exception:
+    pass
