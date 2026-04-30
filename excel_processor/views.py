@@ -23,7 +23,7 @@ from mt_tools.excel_processor.pages import ExcelProcessorPage
 
 class ExcelProcessorUploadFileView(MontrekUploadFileView):
     file_upload_manager_class = ExcelProcessorManager
-    accept = ".XLSX, .TOML"
+    accept = ".XLSX,.TOML"
     title = "Excel Processor"
     page_class = ExcelProcessorPage
     tab = "tab_excel_processor_upload"
