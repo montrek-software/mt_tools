@@ -143,26 +143,4 @@ class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
 class ExcelProcessorManager(FileUploadManagerABC):
     file_upload_processor_class = ExcelProcessor
     file_registry_manager_class = ExcelProcessorRegistryManager
-
-
-try:
-    from django.conf import settings
-    from montrek.celery_app import PARALLEL_QUEUE_NAME
-
-    _manager_setting = getattr(ExcelProcessorManager, "do_process_file_async", None)
-    if _manager_setting is None:
-        _should_register = getattr(settings, "FILE_UPLOAD_PROCESS_ASYNC", True)
-    else:
-        _should_register = bool(_manager_setting)
-
-    if (
-        _should_register
-        and getattr(ExcelProcessorManager, "upload_file_task", None) is None
-    ):
-        ExcelProcessorManager.upload_file_task = (
-            ExcelProcessorManager.upload_file_task_class(
-                manager_class=ExcelProcessorManager, queue=PARALLEL_QUEUE_NAME
-            )
-        )
-except Exception:
-    pass
+    do_process_file_async = True
