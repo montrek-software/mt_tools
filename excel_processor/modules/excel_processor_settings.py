@@ -1,4 +1,3 @@
-import inspect
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
@@ -27,12 +26,11 @@ def get_excel_processor_settings(
     """Return all available TOML settings files for the given functions class.
 
     Settings files are expected in a ``settings/`` subfolder next to the
-    module that defines *functions_class*.
+    module that defines *functions_class*. Unless otherwise defined in function class's settings_path atribute.
     """
     if not functions_class.has_settings:
         return []
-    class_file = Path(inspect.getfile(functions_class))
-    settings_folder = class_file.parent / "settings"
+    settings_folder = functions_class.settings_path
     settings_folder.mkdir(exist_ok=True)
     toml_files = list(settings_folder.glob("*.toml"))
     if not toml_files:
@@ -88,6 +86,7 @@ class ExcelProcessorSettingsMixin:
     """
 
     has_settings: ClassVar[bool] = True
+    settings_path: ClassVar[Path] = Path(__file__).resolve().parent.parent / "settings"
 
     @classmethod
     def get_settings(cls, session_data: SessionDataType) -> dict:

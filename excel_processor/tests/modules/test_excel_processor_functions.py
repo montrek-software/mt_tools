@@ -5,6 +5,7 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from mt_tools.excel_processor.modules.excel_processor_settings import (
+    ExcelProcessorSettingsMixin,
     get_excel_processor_settings,
 )
 
@@ -17,12 +18,11 @@ class MockExcelProcessorNoSettings:
     has_settings: ClassVar[bool] = False
 
 
-class MockExcelProcessorWithSettings:
+class MockExcelProcessorWithSettings(ExcelProcessorSettingsMixin):
     """Mock class with has_settings = True."""
 
     label: ClassVar[str] = "Mock With Settings"
     description: ClassVar[str] = "A mock class that has settings."
-    has_settings: ClassVar[bool] = True
 
 
 class GetExcelProcessorSettingsTests(TestCase):
