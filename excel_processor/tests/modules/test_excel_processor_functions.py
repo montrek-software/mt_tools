@@ -33,7 +33,7 @@ class GetExcelProcessorSettingsTests(TestCase):
         ):
             with self.assertRaises(FileNotFoundError):
                 MockExcelProcessorWithSettings.get_excel_processor_settings()
-            mock_mkdir.assert_called_once_with(exist_ok=True)
+            mock_mkdir.assert_called_once_with(exist_ok=True, parents=True)
 
     def test_raises_error_when_settings_folder_is_empty(self):
         with (
