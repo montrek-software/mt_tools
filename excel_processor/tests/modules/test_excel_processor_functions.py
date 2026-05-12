@@ -1,3 +1,4 @@
+import inspect
 import os
 from pathlib import Path
 from typing import ClassVar
@@ -7,16 +8,7 @@ from django.test import TestCase
 
 from mt_tools.excel_processor.modules.excel_processor_settings import (
     ExcelProcessorSettingsMixin,
-    get_excel_processor_settings,
 )
-
-
-class MockExcelProcessorNoSettings:
-    """Mock class with has_settings = False."""
-
-    label: ClassVar[str] = "Mock No Settings"
-    description: ClassVar[str] = "A mock class that has no settings."
-    has_settings: ClassVar[bool] = False
 
 
 class MockExcelProcessorWithSettings(ExcelProcessorSettingsMixin):
@@ -27,14 +19,12 @@ class MockExcelProcessorWithSettings(ExcelProcessorSettingsMixin):
 
 
 class MockExcelProcessorWithSettingsPath(MockExcelProcessorWithSettings):
-    settings_path: ClassVar[Path] = Path(__file__).resolve().parent / "alt_settings"
+    @classmethod
+    def get_settings_path(cls) -> Path:
+        return Path(inspect.getfile(cls)).resolve().parent / "alt_settings"
 
 
 class GetExcelProcessorSettingsTests(TestCase):
-    def test_returns_empty_list_when_has_settings_is_false(self):
-        result = get_excel_processor_settings(MockExcelProcessorNoSettings)
-        self.assertEqual(result, [])
-
     def test_creates_settings_folder_if_not_exists(self):
         with (
             patch("inspect.getfile", return_value="/fake/path/module.py"),
@@ -42,7 +32,7 @@ class GetExcelProcessorSettingsTests(TestCase):
             patch("pathlib.Path.glob", return_value=[]),
         ):
             with self.assertRaises(FileNotFoundError):
-                get_excel_processor_settings(MockExcelProcessorWithSettings)
+                MockExcelProcessorWithSettings.get_excel_processor_settings()
             mock_mkdir.assert_called_once_with(exist_ok=True)
 
     def test_raises_error_when_settings_folder_is_empty(self):
@@ -52,7 +42,7 @@ class GetExcelProcessorSettingsTests(TestCase):
             patch("pathlib.Path.glob", return_value=[]),
         ):
             with self.assertRaises(FileNotFoundError) as ctx:
-                get_excel_processor_settings(MockExcelProcessorWithSettings)
+                MockExcelProcessorWithSettings.get_excel_processor_settings()
             self.assertIn("MockExcelProcessorWithSettings", str(ctx.exception))
             self.assertIn("has_settings = False", str(ctx.exception))
 
@@ -66,7 +56,7 @@ class GetExcelProcessorSettingsTests(TestCase):
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.glob", return_value=toml_files),
         ):
-            result = get_excel_processor_settings(MockExcelProcessorWithSettings)
+            result = MockExcelProcessorWithSettings.get_excel_processor_settings()
         self.assertEqual([res.get_full_path() for res in result], toml_files)
 
     def test_returns_single_toml_file_as_list(self):
@@ -76,7 +66,7 @@ class GetExcelProcessorSettingsTests(TestCase):
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.glob", return_value=toml_files),
         ):
-            result = get_excel_processor_settings(MockExcelProcessorWithSettings)
+            result = MockExcelProcessorWithSettings.get_excel_processor_settings()
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].filetype, "toml")
 
@@ -88,5 +78,5 @@ class GetExcelProcessorSettingsTests(TestCase):
             for toml_file in toml_files
             if toml_file.endswith(".toml")
         ]
-        result = get_excel_processor_settings(MockExcelProcessorWithSettingsPath)
+        result = MockExcelProcessorWithSettingsPath.get_excel_processor_settings()
         self.assertEqual([res.get_full_path() for res in result], toml_files)
