@@ -26,7 +26,8 @@ def get_excel_processor_settings(
     """Return all available TOML settings files for the given functions class.
 
     Settings files are expected in a ``settings/`` subfolder next to the
-    module that defines *functions_class*. Unless otherwise defined in function class's settings_path atribute.
+    module that defines *functions_class*. Unless otherwise defined in function
+    class's settings_path attribute.
     """
     if not functions_class.has_settings:
         return []
