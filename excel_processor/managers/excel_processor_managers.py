@@ -113,7 +113,7 @@ class ExcelProcessor:
         buffer.seek(0)
         return ContentFile(buffer.read(), name=zip_name)
 
-    def _get_filename(self, file_path: str) -> str:
+    def _get_filename(self, file_path: str | None) -> str:
         if file_path:
             safe_name = os.path.basename(file_path)
             base = safe_name.split(".")[0]
