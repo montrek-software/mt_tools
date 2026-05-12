@@ -73,10 +73,12 @@ class GetExcelProcessorSettingsTests(TestCase):
     def test_returns_toml_file_paths_as_strings_no_default_settings_path(self):
         settings_path = Path(__file__).resolve().parent / "alt_settings"
         toml_files = os.listdir(settings_path)
-        toml_files = [
-            settings_path / toml_file
-            for toml_file in toml_files
-            if toml_file.endswith(".toml")
-        ]
+        toml_files = sorted(
+            [
+                settings_path / toml_file
+                for toml_file in toml_files
+                if toml_file.endswith(".toml")
+            ]
+        )
         result = MockExcelProcessorWithSettingsPath.get_excel_processor_settings()
-        self.assertEqual([res.get_full_path() for res in result], toml_files)
+        self.assertEqual(sorted([res.get_full_path() for res in result]), toml_files)
