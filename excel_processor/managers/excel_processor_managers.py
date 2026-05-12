@@ -46,10 +46,10 @@ class ExcelProcessor:
         self.processor_function_name = self.session_data["function"][0]
         self.output: None | ExcelProcessorReturn = None
 
-    def pre_check(self, file_path: str) -> bool:
+    def pre_check(self, file_path: str | None) -> bool:
         return True
 
-    def process(self, file_path: str) -> bool:
+    def process(self, file_path: str | None) -> bool:
         processor_function = getattr(
             self.excel_processor_functions_class,
             self.processor_function_name,
@@ -62,8 +62,10 @@ class ExcelProcessor:
         self.message = f"Processed {self.processor_function_name}!"
         return True
 
-    def post_check(self, file_path: str) -> bool:
+    def post_check(self, file_path: str | None) -> bool:
         if self.output is None:
+            return False
+        if file_path is None:
             return False
         output_filename = self._get_filename(file_path=file_path)
         if self.output.return_type == ExcelProcessorReturnType.XLSX:

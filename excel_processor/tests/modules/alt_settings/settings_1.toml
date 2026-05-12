@@ -1,0 +1,8 @@
+[settings]
+sheet_name = "Sheet1"
+header_row = 1
+skip_empty_rows = true
+
+[output]
+file_prefix = "processed_"
+include_timestamp = true

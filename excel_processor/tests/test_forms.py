@@ -4,12 +4,14 @@ from django.test import TestCase
 
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.modules.excel_processor_functions import return_excel
+from mt_tools.excel_processor.modules.excel_processor_settings import (
+    ExcelProcessorSettingsMixin,
+)
 
 
-class MockExcelProcessorFunctionsClass:
+class MockExcelProcessorFunctionsClass(ExcelProcessorSettingsMixin):
     label: ClassVar[str] = "Test Functions"
     description: ClassVar[str] = "Mock functions for testing with settings."
-    has_settings: ClassVar[bool] = True
 
     @staticmethod
     @return_excel
