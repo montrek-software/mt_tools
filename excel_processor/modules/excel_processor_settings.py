@@ -55,7 +55,7 @@ class ExcelProcessorSettingsMixin:
         if not cls.has_settings:
             return []
         settings_folder = cls.get_settings_path()
-        settings_folder.mkdir(exist_ok=True)
+        settings_folder.mkdir(exist_ok=True, parents=True)
         toml_files = list(settings_folder.glob("*.toml"))
         if not toml_files:
             raise FileNotFoundError(
