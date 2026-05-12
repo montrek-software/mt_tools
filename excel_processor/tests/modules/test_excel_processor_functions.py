@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import ClassVar
 from unittest.mock import patch
@@ -23,6 +24,10 @@ class MockExcelProcessorWithSettings(ExcelProcessorSettingsMixin):
 
     label: ClassVar[str] = "Mock With Settings"
     description: ClassVar[str] = "A mock class that has settings."
+
+
+class MockExcelProcessorWithSettingsPath(MockExcelProcessorWithSettings):
+    settings_path: ClassVar[Path] = Path(__file__).resolve().parent / "alt_settings"
 
 
 class GetExcelProcessorSettingsTests(TestCase):
@@ -74,3 +79,14 @@ class GetExcelProcessorSettingsTests(TestCase):
             result = get_excel_processor_settings(MockExcelProcessorWithSettings)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].filetype, "toml")
+
+    def test_returns_toml_file_paths_as_strings_no_default_settings_path(self):
+        settings_path = Path(__file__).resolve().parent / "alt_settings"
+        toml_files = os.listdir(settings_path)
+        toml_files = [
+            settings_path / toml_file
+            for toml_file in toml_files
+            if toml_file.endswith(".toml")
+        ]
+        result = get_excel_processor_settings(MockExcelProcessorWithSettingsPath)
+        self.assertEqual([res.get_full_path() for res in result], toml_files)
