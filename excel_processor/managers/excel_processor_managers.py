@@ -43,7 +43,11 @@ class ExcelProcessor:
         self.excel_processor_functions_class = (
             view_class.excel_processor_functions_class
         )
-        self.processor_function_name = self.session_data["function"][0]
+        function_value = self.session_data["function"]
+        if isinstance(function_value, list):
+            self.processor_function_name = function_value[0]
+        else:
+            self.processor_function_name = function_value
         self.output: None | ExcelProcessorReturn = None
 
     def pre_check(self, file_path: str | None) -> bool:
@@ -110,8 +114,12 @@ class ExcelProcessor:
         return ContentFile(buffer.read(), name=zip_name)
 
     def _get_filename(self, file_path: str) -> str:
-        safe_name = os.path.basename(file_path)
-        return f"{safe_name.split('.')[0]}__{self.processor_function_name}.{self.output.return_type.value}"
+        if file_path:
+            safe_name = os.path.basename(file_path)
+            base = safe_name.split(".")[0]
+        else:
+            base = self.processor_function_name
+        return f"{base}__{self.processor_function_name}.{self.output.return_type.value}"
 
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
