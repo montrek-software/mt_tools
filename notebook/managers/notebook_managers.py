@@ -1,3 +1,4 @@
+import json
 from mt_tools.notebook.dataclasses.notebook_table_elements import (
     NotebookFieldTableElement,
 )
@@ -88,7 +89,7 @@ class NotebookNotebookDatasTableManager(NotebookDataTableManager):
         )
         fields = notebook.field_name
         if fields is not None:
-            for field in fields.split(";"):
+            for field in json.loads(fields):
                 table_elements.append(NotebookFieldTableElement(name=field, attr=field))
 
         table_elements += [
