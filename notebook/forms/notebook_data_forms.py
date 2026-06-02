@@ -1,3 +1,4 @@
+import json
 from django import forms
 from django.db.models import QuerySet
 from baseclasses.forms import MontrekCreateForm
@@ -35,7 +36,7 @@ class NotebookDataBaseForm(MontrekCreateForm):
     def _add_fields_from_field_names(self, field_names: str | None) -> None:
         if field_names is None:
             return
-        for field in field_names.split(";"):
+        for field in json.loads(field_names):
             self.fields[field] = forms.CharField(
                 required=False,
                 widget=TEXTAREA_WIDGET,
