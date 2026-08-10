@@ -1,37 +1,48 @@
 from unittest.mock import MagicMock
 
 from django.test import TestCase
-from django.urls import reverse
+from process_pipeline.functions.selection import FunctionSelection, get_dotted_path
 
 from mt_tools.excel_processor.managers.excel_processor_managers import ExcelProcessor
+from mt_tools.excel_processor.modules.excel_processor_basis_functions import (
+    ExcelProcessorBasisFunctions,
+)
 from mt_tools.excel_processor.modules.excel_processor_functions import (
     ExcelProcessorReturnType,
 )
 
+FUNCTIONS_CLASS_PATH = get_dotted_path(ExcelProcessorBasisFunctions)
 
-def _make_processor(function_value: str | list) -> ExcelProcessor:
-    session_data = {
-        "function": function_value,
-        "request_path": reverse("upload_excel_processor"),
-    }
-    return ExcelProcessor(
+
+def _make_processor(function_name: str) -> ExcelProcessor:
+    processor = ExcelProcessor(
         file_upload_registry_hub=MagicMock(),
-        session_data=session_data,
+        session_data={},
     )
+    processor.set_pipeline_data(
+        FunctionSelection(
+            functions_class_path=FUNCTIONS_CLASS_PATH,
+            function_name=function_name,
+        ).to_pipeline_data()
+    )
+    return processor
 
 
-class TestExcelProcessorFunctionName(TestCase):
-    def test_function_as_list_takes_first_element(self):
-        processor = _make_processor(["format_montrek"])
-        self.assertEqual(processor.processor_function_name, "format_montrek")
-
-    def test_function_as_string_used_directly(self):
+class TestExcelProcessorSelection(TestCase):
+    def test_function_name_read_from_pipeline_data(self):
         processor = _make_processor("format_montrek")
         self.assertEqual(processor.processor_function_name, "format_montrek")
 
-    def test_function_as_list_with_multiple_entries_takes_first(self):
-        processor = _make_processor(["format_montrek", "raise_error"])
-        self.assertEqual(processor.processor_function_name, "format_montrek")
+    def test_functions_class_read_from_pipeline_data(self):
+        processor = _make_processor("format_montrek")
+        self.assertIs(
+            processor.excel_processor_functions_class, ExcelProcessorBasisFunctions
+        )
+
+    def test_unknown_function_name_is_rejected(self):
+        processor = _make_processor("get_excel_processor_settings")
+        self.assertFalse(processor.process("/some/path/report.xlsx"))
+        self.assertIn("is not a processor function", processor.message)
 
 
 class TestExcelProcessorGetFilename(TestCase):

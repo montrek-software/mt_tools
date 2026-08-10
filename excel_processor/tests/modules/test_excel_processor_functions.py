@@ -25,7 +25,8 @@ class MockExcelProcessorWithSettingsPath(MockExcelProcessorWithSettings):
 
 
 class GetExcelProcessorSettingsTests(TestCase):
-    def test_creates_settings_folder_if_not_exists(self):
+    def test_does_not_create_the_settings_folder(self):
+        """Discovery stays read-only so it works on a read-only deployment."""
         with (
             patch("inspect.getfile", return_value="/fake/path/module.py"),
             patch("pathlib.Path.mkdir") as mock_mkdir,
@@ -33,12 +34,11 @@ class GetExcelProcessorSettingsTests(TestCase):
         ):
             with self.assertRaises(FileNotFoundError):
                 MockExcelProcessorWithSettings.get_excel_processor_settings()
-            mock_mkdir.assert_called_once_with(exist_ok=True, parents=True)
+            mock_mkdir.assert_not_called()
 
     def test_raises_error_when_settings_folder_is_empty(self):
         with (
             patch("inspect.getfile", return_value="/fake/path/module.py"),
-            patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.glob", return_value=[]),
         ):
             with self.assertRaises(FileNotFoundError) as ctx:
@@ -53,7 +53,6 @@ class GetExcelProcessorSettingsTests(TestCase):
         ]
         with (
             patch("inspect.getfile", return_value="/fake/path/module.py"),
-            patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.glob", return_value=toml_files),
         ):
             result = MockExcelProcessorWithSettings.get_excel_processor_settings()
@@ -63,7 +62,6 @@ class GetExcelProcessorSettingsTests(TestCase):
         toml_files = [Path("/fake/path/settings/only.toml")]
         with (
             patch("inspect.getfile", return_value="/fake/path/module.py"),
-            patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.glob", return_value=toml_files),
         ):
             result = MockExcelProcessorWithSettings.get_excel_processor_settings()

@@ -6,6 +6,7 @@ from file_upload.views import (
     MontrekDownloadFileView,
     MontrekUploadFileView,
 )
+from process_pipeline.functions.selection import FunctionSelection
 
 from mt_tools.excel_processor.forms import ExcelProcessorUploadFileForm
 from mt_tools.excel_processor.managers.excel_processor_managers import (
@@ -52,6 +53,11 @@ class ExcelProcessorUploadFileView(MontrekUploadFileView):
 
     def get_success_url(self):
         return reverse("excel_processor")
+
+    def get_pipeline_data(self, form) -> dict:
+        return FunctionSelection.from_cleaned_data(
+            self.excel_processor_functions_class, form.cleaned_data
+        ).to_pipeline_data()
 
     def get_post_form(self, request):
         return self.upload_form_class(

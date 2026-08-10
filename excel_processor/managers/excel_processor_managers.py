@@ -1,12 +1,11 @@
 import os
-from io import BytesIO
 from typing import Any
-from zipfile import ZIP_DEFLATED, ZipFile
 
-import pandas as pd
 from django.core.files.base import ContentFile
-from django.urls import resolve
-from file_upload.managers.file_upload_manager import FileUploadManagerABC
+from file_upload.managers.file_upload_manager import (
+    FileUploadManagerABC,
+    FileUploadProcessorProtocol,
+)
 from file_upload.managers.file_upload_registry_manager import (
     FileUploadRegistryManagerABC,
 )
@@ -14,6 +13,8 @@ from file_upload.models import FileUploadRegistryHubABC
 from file_upload.repositories.file_upload_file_repository import (
     FileUploadFileRepository,
 )
+from process_pipeline.functions.result_files import build_excel_file, build_zip_file
+from process_pipeline.functions.selection import FunctionSelection
 from reporting.dataclasses.table_elements import LinkTableElement
 
 from mt_tools.excel_processor.modules.excel_processor_formatter import (
@@ -28,7 +29,7 @@ from mt_tools.excel_processor.repositories.excel_processor_repositories import (
 )
 
 
-class ExcelProcessor:
+class ExcelProcessor(FileUploadProcessorProtocol):
     excel_processor_formatter = ExcelProcessorMontrekFormatter
 
     def __init__(
@@ -37,33 +38,40 @@ class ExcelProcessor:
         session_data: dict[str, Any],
         **kwargs,
     ):
-        self.message = "Not processed!"
+        self.set_message("Not processed!")
         self.session_data = session_data
-        view_class = resolve(self.session_data["request_path"]).func.view_class
-        self.excel_processor_functions_class = (
-            view_class.excel_processor_functions_class
-        )
-        function_value = self.session_data["function"]
-        if isinstance(function_value, list):
-            self.processor_function_name = function_value[0]
-        else:
-            self.processor_function_name = function_value
         self.output: None | ExcelProcessorReturn = None
+        self._selection: FunctionSelection | None = None
+
+    @property
+    def selection(self) -> FunctionSelection:
+        """What the user picked in the upload form."""
+        if self._selection is None:
+            self._selection = FunctionSelection.from_pipeline_data(self.pipeline_data)
+        return self._selection
+
+    @property
+    def excel_processor_functions_class(self) -> type:
+        return self.selection.functions_class
+
+    @property
+    def processor_function_name(self) -> str:
+        return self.selection.function_name
 
     def pre_check(self, file_path: str | None) -> bool:
         return True
 
     def process(self, file_path: str | None) -> bool:
-        processor_function = getattr(
-            self.excel_processor_functions_class,
-            self.processor_function_name,
-        )
         try:
+            processor_function = self.selection.get_function()
             self.output = processor_function(file_path, self.session_data)
         except Exception as e:
-            self.message = f"Error raised during Excel File Processing function {self.processor_function_name}: {e}"
+            self.set_message(
+                "Error raised during Excel File Processing function "
+                f"{self.processor_function_name}: {e}"
+            )
             return False
-        self.message = f"Processed {self.processor_function_name}!"
+        self.set_message(f"Processed {self.processor_function_name}!")
         return True
 
     def post_check(self, file_path: str | None) -> bool:
@@ -90,28 +98,14 @@ class ExcelProcessor:
         return True
 
     def return_excel(self, file_name: str) -> ContentFile:
-        buffer = BytesIO()
-
-        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-            for sheet in self.output.data:
-                self.output.data[sheet].to_excel(writer, sheet_name=sheet, index=False)
-                self.excel_processor_formatter.format_excel(writer, sheet_name=sheet)
-
-        buffer.seek(0)
-        return ContentFile(buffer.read(), name=file_name)
+        return build_excel_file(
+            self.output.data,
+            file_name,
+            formatter=self.excel_processor_formatter.format_excel,
+        )
 
     def return_zip(self, zip_name: str) -> ContentFile:
-        buffer = BytesIO()
-
-        with ZipFile(buffer, "w", compression=ZIP_DEFLATED) as zip_file:
-            for file_path in self.output.data:
-                zip_file.write(
-                    file_path,
-                    arcname=os.path.basename(file_path),
-                )
-
-        buffer.seek(0)
-        return ContentFile(buffer.read(), name=zip_name)
+        return build_zip_file(list(self.output.data), zip_name)
 
     def _get_filename(self, file_path: str | None) -> str:
         if file_path:
