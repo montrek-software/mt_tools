@@ -1,7 +1,11 @@
+import os
+import uuid
+
 from baseclasses.dataclasses.view_classes import ListActionElement, PlayActionElement
 from django.core.files.storage import default_storage
 from django.forms import Form
 from django.urls import reverse
+from django.utils.text import get_valid_filename
 from file_export.views.file_export_views import (
     FileExportDownloadView,
     FileExportFormView,
@@ -79,8 +83,20 @@ class ReportGeneratorExportFormView(FileExportFormView):
         if not settings_file:
             return None
         return default_storage.save(
-            f"{SETTINGS_UPLOAD_FOLDER}/{settings_file.name}", settings_file
+            f"{SETTINGS_UPLOAD_FOLDER}/{self._get_storage_name(settings_file.name)}",
+            settings_file,
         )
+
+    @staticmethod
+    def _get_storage_name(uploaded_name: str) -> str:
+        """Turn a client-supplied file name into a safe, unique storage name.
+
+        The name comes from the browser, so path segments and unsafe characters
+        are stripped rather than trusted to the storage backend. The prefix keeps
+        two users uploading ``settings.toml`` from landing on the same key.
+        """
+        safe_name = get_valid_filename(os.path.basename(uploaded_name))
+        return f"{uuid.uuid4().hex}_{safe_name}"
 
     def get_success_url(self) -> str:
         return reverse("report_generator_export_registry_list")

@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock
 
 import pandas as pd
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -24,7 +26,9 @@ from mt_tools.report_generator.tests.factories.report_generator_export_registry_
     ReportGeneratorExportRegistrySatelliteFactory,
 )
 from mt_tools.report_generator.views.report_generator_export_registry_views import (
+    SETTINGS_UPLOAD_FOLDER,
     ReportGeneratorExportDownloadView,
+    ReportGeneratorExportFormView,
     ReportGeneratorExportRegistryListView,
 )
 
@@ -239,3 +243,44 @@ class TestReportGeneratorFileExportProcessor(TestCase):
         processor = _make_processor("settings_overview")
         self.assertFalse(processor.post_check())
         self.assertIn("returned nothing", processor.message)
+
+
+class TestReportGeneratorStoreSettingsFile(TestCase):
+    """The upload name comes from the browser, so it is never trusted as a key."""
+
+    def setUp(self):
+        self.view = ReportGeneratorExportFormView()
+
+    def _store(self, name: str, content: bytes = CUSTOM_SETTINGS_TOML) -> str:
+        # ContentFile, not SimpleUploadedFile: Django's UploadedFile already
+        # basenames the name, which would hide what this method does.
+        stored_name = self.view.store_settings_file(ContentFile(content, name=name))
+        self.addCleanup(default_storage.delete, stored_name)
+        return stored_name
+
+    def test_returns_none_without_an_upload(self):
+        self.assertIsNone(self.view.store_settings_file(None))
+
+    def test_stores_below_the_settings_folder(self):
+        stored_name = self._store("custom.toml")
+        self.assertTrue(stored_name.startswith(f"{SETTINGS_UPLOAD_FOLDER}/"))
+
+    def test_keeps_the_original_file_name_visible(self):
+        stored_name = self._store("custom.toml")
+        self.assertTrue(stored_name.endswith("_custom.toml"))
+
+    def test_strips_path_segments_from_the_client_name(self):
+        stored_name = self._store("../../evil.toml")
+        self.assertNotIn("..", stored_name)
+        self.assertEqual(stored_name.count("/"), 1)
+        self.assertTrue(stored_name.endswith("_evil.toml"))
+
+    def test_two_uploads_of_the_same_name_get_different_keys(self):
+        first = self._store("custom.toml")
+        second = self._store("custom.toml")
+        self.assertNotEqual(first, second)
+
+    def test_stored_file_keeps_its_contents(self):
+        stored_name = self._store("custom.toml")
+        with default_storage.open(stored_name, "rb") as stored_file:
+            self.assertEqual(stored_file.read(), CUSTOM_SETTINGS_TOML)
