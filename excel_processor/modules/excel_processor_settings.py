@@ -1,23 +1,21 @@
-from dataclasses import dataclass
-import inspect
-from pathlib import Path
-from typing import ClassVar
+"""Excel flavour of the generic TOML settings layer.
 
-import tomllib
+The mechanics live in ``process_pipeline.functions.processor_settings``; this
+module keeps the ``session_data``-driven API the Excel processor functions were
+written against. New processors should use ``ProcessorSettingsMixin`` and
+``resolve_settings`` directly, which take an explicit settings name instead of
+digging through ``session_data``.
+"""
+
 from baseclasses.typing import SessionDataType
+from process_pipeline.functions.processor_settings import (  # noqa: F401
+    ProcessorSettingsMixin,
+    SettingsData,
+    load_settings_file,
+)
 
 
-@dataclass
-class SettingsData:
-    name: str
-    path: Path
-    filetype: str = "toml"
-
-    def get_full_path(self) -> Path:
-        return self.path / f"{self.name}.{self.filetype}"
-
-
-class ExcelProcessorSettingsMixin:
+class ExcelProcessorSettingsMixin(ProcessorSettingsMixin):
     """Mixin that binds settings loading to the functions class.
 
     Inherit from this mixin when your functions class reads TOML settings.
@@ -38,39 +36,14 @@ class ExcelProcessorSettingsMixin:
                 ...
     """
 
-    has_settings: ClassVar[bool] = True
-
-    @classmethod
-    def get_settings_path(cls) -> Path:
-        return Path(inspect.getfile(cls)).resolve().parent / "settings"
-
     @classmethod
     def get_excel_processor_settings(cls) -> list[SettingsData]:
-        """Return all available TOML settings files for the given functions class.
-
-        Settings files are expected in a ``settings/`` subfolder next to the
-        module that defines *functions_class*. Unless otherwise defined in function
-        class's settings_path attribute.
-        """
-        if not cls.has_settings:
-            return []
-        settings_folder = cls.get_settings_path()
-        settings_folder.mkdir(exist_ok=True, parents=True)
-        toml_files = list(settings_folder.glob("*.toml"))
-        if not toml_files:
-            raise FileNotFoundError(
-                f"No .toml settings files found in '{settings_folder}'. "
-                "Either add .toml files to the settings folder, "
-                f"or set `has_settings = False` on {cls.__name__}."
-            )
-        return [SettingsData(name=f.stem, path=f.parent) for f in toml_files]
+        """Return all available TOML settings files for this functions class."""
+        return cls.get_available_settings()
 
     @classmethod
-    def get_settings(
-        cls,
-        session_data: SessionDataType,
-    ) -> dict:
-        """Load the TOML settings file selected in *session_data* for *functions_class*."""
+    def get_settings(cls, session_data: SessionDataType) -> dict:
+        """Load the TOML settings file selected in *session_data*."""
         settings_name = session_data.get("settings")
         if settings_name is None:
             raise KeyError(
@@ -79,10 +52,4 @@ class ExcelProcessorSettingsMixin:
             )
         if isinstance(settings_name, list) and len(settings_name) == 1:
             settings_name = settings_name[0]
-        for setting in cls.get_excel_processor_settings():
-            if setting.name == settings_name:
-                with open(setting.get_full_path(), "rb") as f:
-                    return tomllib.load(f)
-        raise FileNotFoundError(
-            f"No settings file '{settings_name}' found for {cls.__name__}."
-        )
+        return cls.load_settings(settings_name)

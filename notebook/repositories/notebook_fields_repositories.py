@@ -29,6 +29,4 @@ class NotebookNotebookFieldssRepository(NotebookFieldsRepository):
             self._notebook_hub_id = NotebookHubValueDate.objects.values_list(
                 "hub_id", flat=True
             ).get(pk=self.session_data.get("pk"))
-        return super().receive(apply_filter).filter(
-            notebook_id=self._notebook_hub_id
-        )
+        return super().receive(apply_filter).filter(notebook_id=self._notebook_hub_id)

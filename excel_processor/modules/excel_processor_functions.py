@@ -1,7 +1,17 @@
-from dataclasses import dataclass
+"""Excel flavour of the generic processor-functions layer.
+
+The mechanics live in ``process_pipeline.functions.processor_functions``; this
+module only pins the return types the Excel processor can build. Import the
+generic names directly when writing a new processor.
+"""
+
 from enum import Enum
-from functools import wraps
-from typing import Any, ClassVar, Protocol
+
+from process_pipeline.functions.processor_functions import (
+    ProcessorFunctionsProtocol,
+    ProcessorReturn,
+    return_with_type,
+)
 
 
 class ExcelProcessorReturnType(Enum):
@@ -9,47 +19,9 @@ class ExcelProcessorReturnType(Enum):
     ZIP = "zip"
 
 
-@dataclass
-class ExcelProcessorReturn:
-    data: Any
-    return_type: ExcelProcessorReturnType
+# Kept as aliases so existing imports and isinstance checks keep working.
+ExcelProcessorReturn = ProcessorReturn
+ExcelProcessorFunctionsProtocol = ProcessorFunctionsProtocol
 
-
-class ExcelProcessorFunctionsProtocol(Protocol):
-    """Protocol for Excel Processor functions classes.
-
-    Concrete implementations should:
-    - Set ``label`` and ``description`` as class-level string attributes.
-    - Expose processing logic as ``@staticmethod`` methods decorated with
-      ``@return_excel`` or ``@return_zip``.  Each function must accept
-      ``(inpath: str, session_data: dict)`` and implicitly return an
-      ``ExcelProcessorReturn`` via the decorator.
-
-    The ``label`` is shown to users when selecting a functions class;
-    ``description`` can be used in tooltips or documentation pages.
-    """
-
-    label: ClassVar[str]
-    description: ClassVar[str]
-    has_settings: ClassVar[bool]
-
-
-def return_with_type(return_type):
-    """Decorator factory to return data with a specified type."""
-
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            return ExcelProcessorReturn(
-                data=func(*args, **kwargs), return_type=return_type
-            )
-
-        wrapper._is_processor_function = True
-        return wrapper
-
-    return decorator
-
-
-# Create specific decorators using the factory
 return_excel = return_with_type(ExcelProcessorReturnType.XLSX)
 return_zip = return_with_type(ExcelProcessorReturnType.ZIP)
