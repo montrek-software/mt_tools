@@ -6,17 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('baseclasses', '0006_testhubvaluedate_baseclasses_value_d_976969_idx_and_more'),
-        ('excel_processor', '0002_excelprocessorfileuploadregistryhubvaluedate'),
+        (
+            "baseclasses",
+            "0006_testhubvaluedate_baseclasses_value_d_976969_idx_and_more",
+        ),
+        ("excel_processor", "0002_excelprocessorfileuploadregistryhubvaluedate"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='excelprocessorfileuploadregistryhubvaluedate',
-            index=models.Index(fields=['value_date_list'], name='excel_proce_value_d_17c026_idx'),
+            model_name="excelprocessorfileuploadregistryhubvaluedate",
+            index=models.Index(
+                fields=["value_date_list"], name="excel_proce_value_d_17c026_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='excelprocessorfileuploadregistryhubvaluedate',
-            index=models.Index(fields=['hub'], name='excel_proce_hub_id_72bf75_idx'),
+            model_name="excelprocessorfileuploadregistryhubvaluedate",
+            index=models.Index(fields=["hub"], name="excel_proce_hub_id_72bf75_idx"),
         ),
     ]

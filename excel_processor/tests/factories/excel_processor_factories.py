@@ -27,7 +27,7 @@ class ExcelProcessorFileUploadRegistryStaticSatelliteFactory(
         if extracted:
             self.test_file = SimpleUploadedFile(
                 name="test_processed_file.txt",
-                content="test".encode("utf-8"),
+                content=b"test",
                 content_type="text/plain",
             )
             upload_file = FileUploadFileStaticSatelliteFactory.create(
