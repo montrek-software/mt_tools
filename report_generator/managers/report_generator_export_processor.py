@@ -73,16 +73,23 @@ class ReportGeneratorFileExportProcessor(FileExportProcessorABC):
         self.set_result_file(self.build_result_file())
         return True
 
+    @property
+    def processed_output(self) -> ProcessorReturn:
+        if self.output is None:
+            raise RuntimeError("The report function has not produced an output.")
+        return self.output
+
     def build_result_file(self) -> ContentFile:
-        file_name = f"{self.selection.function_name}.{self.output.return_type.value}"
-        if self.output.return_type is ReportGeneratorReturnType.XLSX:
+        output = self.processed_output
+        file_name = f"{self.selection.function_name}.{output.return_type.value}"
+        if output.return_type is ReportGeneratorReturnType.XLSX:
             return build_excel_file(
-                self.output.data,
+                output.data,
                 file_name,
                 formatter=self.excel_formatter.format_excel,
             )
-        if self.output.return_type is ReportGeneratorReturnType.ZIP:
-            return build_zip_file(list(self.output.data), file_name)
-        if self.output.return_type is ReportGeneratorReturnType.PDF:
-            return build_bytes_file(self.output.data, file_name)
-        raise TypeError(f"Unknown return type {self.output.return_type}")
+        if output.return_type is ReportGeneratorReturnType.ZIP:
+            return build_zip_file(list(output.data), file_name)
+        if output.return_type is ReportGeneratorReturnType.PDF:
+            return build_bytes_file(output.data, file_name)
+        raise TypeError(f"Unknown return type {output.return_type}")

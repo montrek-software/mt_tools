@@ -1,16 +1,21 @@
 name: Run Montrek Release-Drafter
+
 permissions:
   contents: write
   pull-requests: write
+
 on:
   push:
     branches:
-      - main # <- change if your default branch is different
+      - main
     tags:
-      - "v*" # when you push a tag like v1.2.3 we'll publish
+      - "v*"
   pull_request_target:
     types: [opened, reopened, synchronize, edited, labeled, unlabeled]
   workflow_dispatch:
+
 jobs:
-  run-tests:
-    uses: montrek-software/.github/.github/workflows/montrek_release_drafter_template.yml@main
+  release_drafter:
+    uses: montrek-software/.forgejo/.forgejo/workflows/montrek_release_drafter_template.yml@main
+    secrets:
+      PAT: ${{ secrets.PAT }}

@@ -8,15 +8,19 @@ from file_upload.models import (
 
 
 class ExcelProcessorFileUploadRegistryHub(FileUploadRegistryHubABC):
-    link_file_upload_registry_file_upload_file = models.ManyToManyField(
-        "file_upload.FileUploadFileHub",
-        related_name="link_file_upload_file_excel_processor_registry",
-        through="LinkExcelProcessorRegistryFile",
+    link_file_upload_registry_file_upload_file: models.ManyToManyField = (
+        models.ManyToManyField(
+            "file_upload.FileUploadFileHub",
+            related_name="link_file_upload_file_excel_processor_registry",
+            through="LinkExcelProcessorRegistryFile",
+        )
     )
-    link_file_upload_registry_file_processed_file = models.ManyToManyField(
-        "file_upload.FileUploadFileHub",
-        related_name="link_file_processed_file_excel_processor_registry",
-        through="LinkExcelProcessorRegistryProcessedFile",
+    link_file_upload_registry_file_processed_file: models.ManyToManyField = (
+        models.ManyToManyField(
+            "file_upload.FileUploadFileHub",
+            related_name="link_file_processed_file_excel_processor_registry",
+            through="LinkExcelProcessorRegistryProcessedFile",
+        )
     )
 
 

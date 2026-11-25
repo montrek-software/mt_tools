@@ -8,20 +8,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('baseclasses', '0005_alter_testhubvaluedate_hub'),
-        ('excel_processor', '0001_initial'),
+        ("baseclasses", "0005_alter_testhubvaluedate_hub"),
+        ("excel_processor", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ExcelProcessorFileUploadRegistryHubValueDate',
+            name="ExcelProcessorFileUploadRegistryHubValueDate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hub', baseclasses.fields.HubForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hub_value_date', to='excel_processor.excelprocessorfileuploadregistryhub')),
-                ('value_date_list', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='baseclasses.valuedatelist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "hub",
+                    baseclasses.fields.HubForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hub_value_date",
+                        to="excel_processor.excelprocessorfileuploadregistryhub",
+                    ),
+                ),
+                (
+                    "value_date_list",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="baseclasses.valuedatelist",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]
