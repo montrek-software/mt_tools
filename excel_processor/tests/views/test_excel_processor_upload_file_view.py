@@ -2,9 +2,8 @@ import inspect
 import io
 import os
 import zipfile
-from typing import Any
 
-from django.test.client import WSGIRequest
+from django.http import HttpResponseBase
 from django.urls import reverse
 from testing.decorators import add_logged_in_user
 from testing.test_cases.view_test_cases import (
@@ -29,6 +28,8 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 
 class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
+    processed_file_download_url: str
+
     @add_logged_in_user
     def setUp(self):
         super().setUp()
@@ -59,7 +60,7 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
 
     def _get_response_from_function(
         self, function_name: str, settings_name: str | None = None
-    ) -> Any | WSGIRequest:
+    ) -> HttpResponseBase:
         with open(self.test_file_path_a, "rb") as f:
             data = {"file": f, "function": function_name}
             if settings_name is not None:
@@ -72,14 +73,14 @@ class ExcelProcessorUploadFileTestCase(MontrekViewTestCase):
         self._get_response_from_function(function_name, settings_name)
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
-        test_registry = test_query.first()
+        test_registry = test_query.get()
         response = self.client.get(
             reverse(
                 self.processed_file_download_url,
                 kwargs={"pk": test_registry.pk},
             )
         )
-        content_disposition = response.get("Content-Disposition")
+        content_disposition = response["Content-Disposition"]
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel'),
         )
@@ -100,15 +101,14 @@ class TestExcelProcessorFileUploadView(ExcelProcessorUploadFileTestCase):
         self._get_response_from_function("to_markdown")
         test_query = ExcelProcessorFileUploadRegistryRepository().receive()
         self.assertEqual(test_query.count(), 1)
-        test_registry = test_query.first()
+        test_registry = test_query.get()
         response = self.client.get(
             reverse(
                 self.processed_file_download_url,
                 kwargs={"pk": test_registry.pk},
             )
         )
-        content_disposition = response.get("Content-Disposition")
-        self.assertIsNotNone(content_disposition)
+        content_disposition = response["Content-Disposition"]
         self.assertTrue(
             content_disposition.startswith('attachment; filename="test_excel')
         )

@@ -97,15 +97,21 @@ class ExcelProcessor(FileUploadProcessorProtocol):
         )
         return True
 
+    @property
+    def processed_output(self) -> ExcelProcessorReturn:
+        if self.output is None:
+            raise RuntimeError("The processor function has not produced an output.")
+        return self.output
+
     def return_excel(self, file_name: str) -> ContentFile:
         return build_excel_file(
-            self.output.data,
+            self.processed_output.data,
             file_name,
             formatter=self.excel_processor_formatter.format_excel,
         )
 
     def return_zip(self, zip_name: str) -> ContentFile:
-        return build_zip_file(list(self.output.data), zip_name)
+        return build_zip_file(list(self.processed_output.data), zip_name)
 
     def _get_filename(self, file_path: str | None) -> str:
         if file_path:
@@ -113,7 +119,8 @@ class ExcelProcessor(FileUploadProcessorProtocol):
             base = safe_name.split(".")[0]
         else:
             base = self.processor_function_name
-        return f"{base}__{self.processor_function_name}.{self.output.return_type.value}"
+        return_type = self.processed_output.return_type
+        return f"{base}__{self.processor_function_name}.{return_type.value}"
 
 
 class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
@@ -122,18 +129,16 @@ class ExcelProcessorRegistryManager(FileUploadRegistryManagerABC):
 
     @property
     def table_elements(self) -> tuple:
-        table_elements = super().table_elements
-        table_elements = list(table_elements)
-        table_elements = [
+        return (
             LinkTableElement(
                 name="Processed File",
                 url="excel_processor_download_processed_file",
                 kwargs={"pk": "id"},
                 icon="download",
                 hover_text="Download Processed File",
-            )
-        ] + table_elements
-        return tuple(table_elements)
+            ),
+            *super().table_elements,
+        )
 
 
 class ExcelProcessorManager(FileUploadManagerABC):

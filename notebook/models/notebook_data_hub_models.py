@@ -6,7 +6,7 @@ from baseclasses.models import HubValueDate, MontrekHubABC
 
 
 class NotebookDataHub(MontrekHubABC):
-    link_notebook_data_notebook = models.ManyToManyField(
+    link_notebook_data_notebook: models.ManyToManyField = models.ManyToManyField(
         to=NotebookHub,
         through="LinkNotebookDataNotebook",
         related_name="link_notebook_notebook_data",

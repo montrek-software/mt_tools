@@ -45,7 +45,6 @@ module = [
   "mt_competo.*",
   "mt_economic_common.*",
   "mt_llm.*",
-  "mt_tools.*",
 ]
 ignore_errors = true
 
