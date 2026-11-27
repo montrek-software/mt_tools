@@ -87,10 +87,8 @@ class ExcelProcessorRegistryListView(FileUploadRegistryView):
 
 class ExcelProcessorDownloadFile(MontrekDownloadFileView):
     manager_class = ExcelProcessorRegistryManager
-    title = "Excel Processor Registry Download"
 
 
 class ExcelProcessorDownloadProcessedFileView(MontrekDownloadFileBaseView):
     manager_class = ExcelProcessorRegistryManager
-    title = "Excel Processor Processed File Download"
     get_file_method = "get_processed_file"
