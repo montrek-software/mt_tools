@@ -3,6 +3,7 @@ import io
 import os
 import zipfile
 
+from django.contrib.messages import get_messages
 from django.http import HttpResponseBase
 from django.urls import reverse
 from testing.decorators import add_logged_in_user
@@ -181,3 +182,13 @@ class TestExcelProcessorDownloadProcessedFileView(MontrekDownloadViewTestCase):
 
     def url_kwargs(self):
         return {"pk": self.registry.get_hub_value_date().pk}
+
+    def test_registry_without_processed_file_is_not_found(self):
+        registry = ExcelProcessorFileUploadRegistryStaticSatelliteFactory()
+        response = self.client.get(
+            reverse(self.viewname, kwargs={"pk": registry.get_hub_value_date().pk})
+        )
+        self.assertRedirects(response, reverse("home"), fetch_redirect_response=False)
+        self.assertEqual(
+            [str(m) for m in get_messages(response.wsgi_request)], ["File Not Found"]
+        )

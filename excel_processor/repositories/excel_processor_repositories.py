@@ -24,9 +24,8 @@ class ExcelProcessorFileUploadRegistryRepository(FileUploadRegistryRepositoryABC
             rename_field_map={"file": "processed_file"},
         )
 
-    def get_processed_file(self, file_log_registry_id: int, request) -> File | None:
+    def get_processed_file(self, file_log_registry_id: int) -> File | None:
         file_log_registry_path = (
             self.receive().get(hub__pk=file_log_registry_id).processed_file
         )
-
-        return self._get_file_from_registry(file_log_registry_path, request)
+        return self._get_file_from_registry(file_log_registry_path)
